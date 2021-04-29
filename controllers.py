@@ -19,6 +19,23 @@ app.config["MYSQL_DB"]="bd_click"
 mysql=MySQL(app)
 app.secret_key='mysecretKey'
 
+
+class Pedido(MethodView):
+    def post(self):
+        time.sleep(3)
+        content = request.get_json()
+        nombres = content.get("nombres")
+        apellidos = content.get("apellidos")
+        telefono = content.get("telefono")
+        correo = content.get("correo")
+        direccion = content.get("direccion")
+        
+        cursor = mysql.connection.cursor()
+        cursor.execute('INSERT INTO pedidos (nombres, apellidos, telefono, correo, direccion) VALUES(%s, %s, %s, %s, %s(nombres, apellidos, telefono, correo, direccion))')
+        mysql.connection.commit()
+        cursor.close
+        return jsonify({"Se ha registrado el pedido": True, "nombres": nombres, "apellidos": apellidos, "telefono": telefono, "correo": correo, "direccion": direccion})
+
 class LoginUserControllers(MethodView):
     """
         Example Login

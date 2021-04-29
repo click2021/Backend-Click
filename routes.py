@@ -1,7 +1,11 @@
 from controllers import LoginUserControllers, RegisterUserControllers, Productos,app, PedidosUserControllers,ReservarUserControllers, DatosEmpresa
-from controllers import updateProduct, delete, ProductosId, PedidosUser, agregar
+from controllers import updateProduct, delete, ProductosId, PedidosUser, agregar, Pedido
+
+
+
 
 user = {
+    "pedido": "/api/v01/pedido", "pedido_controllers":  Pedido.as_view("pedido_api"),
     "login_user": "/api/v01/user/login", "login_user_controllers": LoginUserControllers.as_view("login_api"),
     "data_empresa": "/api/v01/user/datosempresa", "data_empresa_controllers": DatosEmpresa.as_view("data_empresa"),
     "Register_user": "/api/v01/user/register", "login_register_controllers": RegisterUserControllers.as_view("register_api"),

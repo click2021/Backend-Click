@@ -14,10 +14,11 @@ from model import users
 app = Flask(__name__)
 app.config["MYSQL_HOST"]="localhost"
 app.config["MYSQL_USER"]="root"
-app.config["MYSQL_PASSWORD"]="1234"
-app.config["MYSQL_DB"]="restaurante"
+app.config["MYSQL_PASSWORD"]=""
+app.config["MYSQL_DB"]="bd_click"
 mysql=MySQL(app)
 app.secret_key='mysecretKey'
+
 class LoginUserControllers(MethodView):
     """
         Example Login
@@ -59,6 +60,22 @@ class LoginUserControllers(MethodView):
                 return jsonify({"Status": "Login incorrecto 22"}), 400
         else:    
             return jsonify({"auth": False}), 400
+
+class DatosEmpresa(MethodView):
+    def get(self):
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM negocio WHERE id=1")
+        negocios = cur.fetchall()
+        datos = []
+        content = {}
+        for valor in negocios:
+            content = {'id':valor[0], 'nombre':valor[1], 'tipo':valor[2], 'direccion':valor[3], 'horarios':valor[4], 'telefono1':valor[5], 'telefono2':valor[6], 'correo':valor[7], 'id_cliente':valor[8], 'imgLogo':valor[9]}
+            datos.append(content)
+            content = {}
+        print("DATOS DEL NEGOCIO: ",datos)
+
+        return jsonify({"data": datos})
+
 class RegisterUserControllers(MethodView):
     def post(self):
         time.sleep(3)
@@ -82,6 +99,7 @@ class RegisterUserControllers(MethodView):
         mysql.connection.commit()
         cur.close()
         return jsonify({"Register ok": True}),200
+
 class Productos(MethodView):
     def get(self):
         cur=mysql.connection.cursor()
@@ -94,6 +112,7 @@ class Productos(MethodView):
             payload.append(content)
             content = {}
         return jsonify({"datos": payload}),200
+
 class PedidosUserControllers(MethodView):
     def get(self):
         if (request.headers.get('Authorization')):
@@ -108,6 +127,7 @@ class PedidosUserControllers(MethodView):
             except:
                 return jsonify({"Status": "TOKEN NO VALIDO"}), 403
         return jsonify({"Status": "No ha enviado un token"}), 403
+
 class ReservarUserControllers(MethodView):
     def post(self):
         try:
@@ -128,6 +148,7 @@ class ReservarUserControllers(MethodView):
             return jsonify({"data":True}),200
         except:
             return "Lo sentimos el registro ya se ha hecho antes "
+
 class ProductosId(MethodView):
     def post(self):
         content = request.get_json()
@@ -188,6 +209,7 @@ class updateProduct(MethodView):
             return jsonify({"datos": True}),200
         except:
             return jsonify({"datos":False}),403
+
 class delete(MethodView):
     def post(self):
         time.sleep(1)

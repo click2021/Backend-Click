@@ -1,8 +1,9 @@
-from controllers import LoginUserControllers,RegisterUserControllers,Productos,app,PedidosUserControllers,ReservarUserControllers
-from controllers import updateProduct,delete,ProductosId,PedidosUser,agregar
+from controllers import LoginUserControllers, RegisterUserControllers, Productos,app, PedidosUserControllers,ReservarUserControllers, DatosEmpresa
+from controllers import updateProduct, delete, ProductosId, PedidosUser, agregar
 
 user = {
     "login_user": "/api/v01/user/login", "login_user_controllers": LoginUserControllers.as_view("login_api"),
+    "data_empresa": "/api/v01/user/datosempresa", "data_empresa_controllers": DatosEmpresa.as_view("data_empresa"),
     "Register_user": "/api/v01/user/register", "login_register_controllers": RegisterUserControllers.as_view("register_api"),
     "Productos_clients":"/api/v01/user/product","productos":Productos.as_view("productos_api"),
     "Productos_clients_pedidos":"/api/v01/user/getInfo","productosPedidos":PedidosUserControllers.as_view("pedidos"),

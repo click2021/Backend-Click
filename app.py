@@ -3,7 +3,8 @@ from routes import *
 from flask_cors import CORS
 from routes import app
 CORS(app, resources={r"/*": {"origins": "*"}})
-app.add_url_rule(routes["pedido"], view_func=routes["pedido_controllers"])
+
+app.add_url_rule(user["pedido_user"], view_func=user["pedido_user_controllers"])
 app.add_url_rule(user["login_user"], view_func=user["login_user_controllers"])
 app.add_url_rule(user["data_empresa"], view_func=user["data_empresa_controllers"])
 app.add_url_rule(user["Register_user"], view_func=user["login_register_controllers"])

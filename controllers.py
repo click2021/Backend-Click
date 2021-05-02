@@ -14,7 +14,7 @@ from model import users
 app = Flask(__name__)
 app.config["MYSQL_HOST"]="localhost"
 app.config["MYSQL_USER"]="root"
-app.config["MYSQL_PASSWORD"]=""
+app.config["MYSQL_PASSWORD"]="2003"
 app.config["MYSQL_DB"]="bd_click"
 mysql=MySQL(app)
 app.secret_key='mysecretKey'
@@ -92,7 +92,30 @@ class DatosEmpresa(MethodView):
         print("DATOS DEL NEGOCIO: ",datos)
 
         return jsonify({"data": datos})
-
+#Clase de registro de la empresa
+class RegisterEmpresaControllers(MethodView):
+    def post(self):
+        content = request.get_json()
+        nombre = content.get("nombre")
+        tipoE = content.get("tipoE")
+        direccionE = content.get("direccionE")
+        numeroE = content.get("numeroE")
+        numeroS = content.get("numeroS")
+        emailE = content.get("emailE")
+        #Este id esta ya predeterminado 
+        id = 3
+        #Horario de la empresa 
+        horario = content.get("horario")
+        logo = content.get("logo")
+        cur=mysql.connection.cursor()
+        cur.execute("""
+        insert into negocio(nombrenegocio,tipo,direccion,telefono1,telefono2,correo,idcliente,horarios,logo)
+        values
+        (%s,%s,%s,%s,%s,%s,%s,%s,%s);
+        """,(nombre,tipoE,direccionE,int(numeroE),int(numeroS),emailE,int(id),horario,logo))
+        mysql.connection.commit()
+        cur.close()
+        return jsonify({"data": True})
 class RegisterUserControllers(MethodView):
     def post(self):
         time.sleep(3)

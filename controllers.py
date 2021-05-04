@@ -1,4 +1,3 @@
-	
 from flask.views import MethodView
 from flask import Flask
 from flask import jsonify, request
@@ -14,7 +13,7 @@ from model import users
 app = Flask(__name__)
 app.config["MYSQL_HOST"]="localhost"
 app.config["MYSQL_USER"]="root"
-app.config["MYSQL_PASSWORD"]="2003"
+app.config["MYSQL_PASSWORD"]=""
 app.config["MYSQL_DB"]="bd_click"
 mysql=MySQL(app)
 app.secret_key='mysecretKey'
@@ -28,10 +27,9 @@ class Pedido(MethodView):
         apellidos = content.get("apellidos")
         telefono = content.get("telefono")
         correo = content.get("correo")
-        direccion = content.get("direccion")
-        
+        direccion = content.get("direccion")        
         cursor = mysql.connection.cursor()
-        cursor.execute('INSERT INTO pedidos (nombres, apellidos, telefono, correo, direccion) VALUES(%s, %s, %s, %s, %s(nombres, apellidos, telefono, correo, direccion))')
+        cursor.execute("""INSERT INTO pedidos (nombres, apellidos, telefono, correo, direccion) VALUES(%s, %s, %s, %s, %s)""",(nombres, apellidos, telefono, correo, direccion))
         mysql.connection.commit()
         cursor.close
         return jsonify({"Se ha registrado el pedido": True, "nombres": nombres, "apellidos": apellidos, "telefono": telefono, "correo": correo, "direccion": direccion})
@@ -81,7 +79,7 @@ class LoginUserControllers(MethodView):
 class DatosEmpresa(MethodView):
     def get(self):
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM negocio WHERE id=1")
+        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idempresario, logo FROM negocio;")
         negocios = cur.fetchall()
         datos = []
         content = {}
@@ -92,30 +90,39 @@ class DatosEmpresa(MethodView):
         print("DATOS DEL NEGOCIO: ",datos)
 
         return jsonify({"data": datos})
-#Clase de registro de la empresa
-class RegisterEmpresaControllers(MethodView):
+
+class ProductosEmpresa(MethodView):
+    def get(self):
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT id, foto, nombre, precio, idnegocio, descripcion FROM producto WHERE idnegocio=1;")
+        productos = cur.fetchall()
+        print("DATOS:",Productos)
+        datos = []
+        content = {}
+        for valor in productos: 
+            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3], 'precio':valor[4], 'descripcion':valor[5]}
+            datos.append(content)
+            content = {}
+        print("DATO0S DE PRODUCTOS DESDE LA BD: ", datos)
+        return jsonify({"ok":True,"data": datos})
+
+class ProductosId(MethodView):
     def post(self):
         content = request.get_json()
-        nombre = content.get("nombre")
-        tipoE = content.get("tipoE")
-        direccionE = content.get("direccionE")
-        numeroE = content.get("numeroE")
-        numeroS = content.get("numeroS")
-        emailE = content.get("emailE")
-        #Este id esta ya predeterminado 
-        id = 3
-        #Horario de la empresa 
-        horario = content.get("horario")
-        logo = content.get("logo")
+        id = content.get("id")
         cur=mysql.connection.cursor()
-        cur.execute("""
-        insert into negocio(nombrenegocio,tipo,direccion,telefono1,telefono2,correo,idcliente,horarios,logo)
-        values
-        (%s,%s,%s,%s,%s,%s,%s,%s,%s);
-        """,(nombre,tipoE,direccionE,int(numeroE),int(numeroS),emailE,int(id),horario,logo))
-        mysql.connection.commit()
-        cur.close()
-        return jsonify({"data": True})
+        cur.execute('SELECT id, foto, nombre, precio, idnegocio, descripcion FROM producto WHERE idnegocio = 1 AND id = %s',([id]))
+        datos = cur.fetchall()
+        print("DATOS: ",datos)
+        payload = []
+        content = {}
+        for result in datos:
+            content = {'id':result[0], 'foto':result[1], 'nombre':result[2], 'precio':result[3],'id_negocio':result[4], 'descripcion':result[5]}
+            payload.append(content)
+            content = {}
+        print("DATOS DE PRODUCTOS POR ID: ", payload)
+        return jsonify({"data": payload}),200
+
 class RegisterUserControllers(MethodView):
     def post(self):
         time.sleep(3)
@@ -188,21 +195,6 @@ class ReservarUserControllers(MethodView):
             return jsonify({"data":True}),200
         except:
             return "Lo sentimos el registro ya se ha hecho antes "
-
-class ProductosId(MethodView):
-    def post(self):
-        content = request.get_json()
-        id = content.get("id")
-        cur=mysql.connection.cursor()
-        cur.execute('SELECT titulo,urlImg,precio FROM `productos` WHERE id = %s;',([id]))
-        datos=cur.fetchall()
-        payload = []
-        for result in datos:
-            content = {'nombre':result[0],'ulrImg':result[1],'precio':result[2]}
-            payload.append(content)
-            content = {}
-        return jsonify({"datos": payload}),200
-
 
 class PedidosUser(MethodView):
     def post(self):
@@ -284,4 +276,30 @@ class agregar(MethodView):
             return jsonify({"datos": True}),200
         except:
             return jsonify({"datos": False}),403
+
+
+#Clase de registro de la empresa
+class RegisterEmpresaControllers(MethodView):
+    def post(self):
+        content = request.get_json()
+        nombre = content.get("nombre")
+        tipoE = content.get("tipoE")
+        direccionE = content.get("direccionE")
+        numeroE = content.get("numeroE")
+        numeroS = content.get("numeroS")
+        emailE = content.get("emailE")
+        #Este id esta ya predeterminado 
+        id = 3
+        #Horario de la empresa 
+        horario = content.get("horario")
+        logo = content.get("logo")
+        cur=mysql.connection.cursor()
+        cur.execute("""
+        insert into negocio(nombrenegocio,tipo,direccion,telefono1,telefono2,correo,idempresario,horarios,logo)
+        values
+        (%s,%s,%s,%s,%s,%s,%s,%s,%s);
+        """,(nombre,tipoE,direccionE,int(numeroE),int(numeroS),emailE,int(id),horario,logo))
+        mysql.connection.commit()
+        cur.close()
+        return jsonify({"data": True})
         

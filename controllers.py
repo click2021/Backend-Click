@@ -1,4 +1,3 @@
-	
 from flask.views import MethodView
 from flask import Flask
 from flask import jsonify, request
@@ -80,7 +79,7 @@ class LoginUserControllers(MethodView):
 class DatosEmpresa(MethodView):
     def get(self):
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idempresario, logo FROM negocio WHERE id=1;")
+        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idempresario, logo FROM negocio;")
         negocios = cur.fetchall()
         datos = []
         content = {}
@@ -105,7 +104,7 @@ class ProductosEmpresa(MethodView):
             datos.append(content)
             content = {}
         print("DATO0S DE PRODUCTOS DESDE LA BD: ", datos)
-        return jsonify({"data": datos})
+        return jsonify({"ok":True,"data": datos})
 
 class ProductosId(MethodView):
     def post(self):
@@ -277,4 +276,30 @@ class agregar(MethodView):
             return jsonify({"datos": True}),200
         except:
             return jsonify({"datos": False}),403
+
+
+#Clase de registro de la empresa
+class RegisterEmpresaControllers(MethodView):
+    def post(self):
+        content = request.get_json()
+        nombre = content.get("nombre")
+        tipoE = content.get("tipoE")
+        direccionE = content.get("direccionE")
+        numeroE = content.get("numeroE")
+        numeroS = content.get("numeroS")
+        emailE = content.get("emailE")
+        #Este id esta ya predeterminado 
+        id = 3
+        #Horario de la empresa 
+        horario = content.get("horario")
+        logo = content.get("logo")
+        cur=mysql.connection.cursor()
+        cur.execute("""
+        insert into negocio(nombrenegocio,tipo,direccion,telefono1,telefono2,correo,idempresario,horarios,logo)
+        values
+        (%s,%s,%s,%s,%s,%s,%s,%s,%s);
+        """,(nombre,tipoE,direccionE,int(numeroE),int(numeroS),emailE,int(id),horario,logo))
+        mysql.connection.commit()
+        cur.close()
+        return jsonify({"data": True})
         

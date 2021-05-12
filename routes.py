@@ -23,9 +23,8 @@ user = {
 
 =======
 """
-from controllers import LoginUserControllers, RegisterUserControllers, Productos,app, PedidosUserControllers,ReservarUserControllers, DatosEmpresa, ProductosEmpresa
-from controllers import updateProduct, delete, ProductosId, PedidosUser, agregar, Pedido,RegisterEmpresaControllers
-
+from controllers import LoginUserControllers, RegisterUserControllers, Productos,app, PedidosUserControllers,ReservarUserControllers, DatosEmpresa, ProductosEmpresa, DatosEmpresaId
+from controllers import updateProduct, delete, EnviarProductos, PedidosUser, agregar, Pedido,RegisterEmpresaControllers
 
 
 
@@ -33,10 +32,13 @@ user = {
     "pedido_user": "/api/v01/pedido", "pedido_user_controllers":  Pedido.as_view("pedido_api"),
     "login_user": "/api/v01/user/login", "login_user_controllers": LoginUserControllers.as_view("login_api"),
     "data_empresa": "/api/v01/user/datosempresa", "data_empresa_controllers": DatosEmpresa.as_view("data_empresa"),
+    "data_empresa_id": "/api/v01/user/datosempresaid", "data_empresa_id_controllers": DatosEmpresaId.as_view("data_empresa_id"),
+    
     "producto_empresa": "/api/v01/user/productoempresa", "producto_empresa_controllers": ProductosEmpresa.as_view("producto_empresa"),
-    "Productos_id":"/api/v01/user/productosid", "IdProduct":ProductosId.as_view("producto_Id"),
+    "enviar_productos":"/api/v01/user/enviarproductos", "enviar_productos_controllers":EnviarProductos.as_view("enviar_productos"),
     
     "Register_user": "/api/v01/user/register", "login_register_controllers": RegisterUserControllers.as_view("register_api"),
+
     "Register_empresa": "/api/v01/user/registerEmpresa", 
     
     "registerEmpresa_controllers":RegisterEmpresaControllers.as_view("registerEmpresa_api"),

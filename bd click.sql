@@ -49,28 +49,29 @@ nombre CHAR(60) NOT NULL,
 precio DOUBLE NOT NULL,
 idnegocio INT NOT NULL,
 descripcion CHAR(200) NOT NULL,
+iva float not null,
 FOREIGN KEY (idnegocio) REFERENCES negocio(id)
 );
 
 
-INSERT INTO producto(foto, nombre, precio, idnegocio, descripcion) 
-VALUES 	("https://s1.eestatic.com/2019/07/02/cocinillas/actualidad-gastronomica/actualidad_gastronomica_410720427_127098320_1280x1280.jpg"," Helado", 15000, 1,"Helado de bainilla"),
-		("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRU9D8uE6wcGL_YZrnv17Ef0Xl0Xn1syHLkWg&usqp=CAU", "Queso", 5000, 1, "El mejor queso, de la finca las golomdrinas"),
-        ("https://comercialgalera.com/wp-content/uploads/2015/06/0320-1.jpg", "Queso Crema", 8000, 1, "El mejor queso de la finca"),
-        ("https://jumbocolombiafood.vteximg.com.br/arquivos/ids/238190-1000-1000/7707192032385.jpg", "Leche de Coco", 5000, 1, "La mejor leche de coco"),
-		("https://admin.consumo.com.co/backend/admin/backend/web/archivosDelCliente/items/images/20200720084729-Lacteos-Refrigerados-Y-Congelados-Margarinas-y-Mantequillas-ESPARCIBLE-CAMPI-X-500-GR-PAISA-142202007200847293199.jpg", "Mantequilla Campi", 6000, 1, "La mejor mantequilla del campo"),
-        ("https://exitocol.vtexassets.com/arquivos/ids/5628097/Queso-Mozzarella-1231158_a.jpg", "Queso Mozzarella", 6000, 1, "El mejor queso mozzarella del campo"),
-        ("https://vixark.b-cdn.net/lp-i-i-g/yogur-griego-con-sabor-a-fresa-alpina-150g.jpg", "Yogur Griego", 3000, 1, "Yogur griego de alpina"),
-        ("https://vixark.b-cdn.net/lp-i-i-g/yogur-griego-con-sabor-a-mora-alpina-160g-arándanos,-granola.jpg", "Yogur Griego", 2500, 1, "Yogur griego de alpina"),
+INSERT INTO producto(foto, nombre, precio, idnegocio, descripcion,iva) 
+VALUES 	("https://s1.eestatic.com/2019/07/02/cocinillas/actualidad-gastronomica/actualidad_gastronomica_410720427_127098320_1280x1280.jpg"," Helado", 15000, 1,"Helado de bainilla",10),
+		("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRU9D8uE6wcGL_YZrnv17Ef0Xl0Xn1syHLkWg&usqp=CAU", "Queso", 5000, 1, "El mejor queso, de la finca las golomdrinas",12),
+        ("https://comercialgalera.com/wp-content/uploads/2015/06/0320-1.jpg", "Queso Crema", 8000, 1, "El mejor queso de la finca",13),
+        ("https://jumbocolombiafood.vteximg.com.br/arquivos/ids/238190-1000-1000/7707192032385.jpg", "Leche de Coco", 5000, 1, "La mejor leche de coco",12),
+		("https://admin.consumo.com.co/backend/admin/backend/web/archivosDelCliente/items/images/20200720084729-Lacteos-Refrigerados-Y-Congelados-Margarinas-y-Mantequillas-ESPARCIBLE-CAMPI-X-500-GR-PAISA-142202007200847293199.jpg", "Mantequilla Campi", 6000, 1, "La mejor mantequilla del campo",12),
+        ("https://exitocol.vtexassets.com/arquivos/ids/5628097/Queso-Mozzarella-1231158_a.jpg", "Queso Mozzarella", 6000, 1, "El mejor queso mozzarella del campo",14),
+        ("https://vixark.b-cdn.net/lp-i-i-g/yogur-griego-con-sabor-a-fresa-alpina-150g.jpg", "Yogur", 3000, 1, "Yogur griego de alpina",6),
+        ("https://vixark.b-cdn.net/lp-i-i-g/yogur-griego-con-sabor-a-mora-alpina-160g-arándanos,-granola.jpg", "Yogur Griego", 2500, 1, "Yogur griego de alpina",12),
         
-        ("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3vKcjgVNV0DnWplH0bQzQswy-3bf-zhuphA&usqp=CAU", "Kumis", 2300, 1, "El mejor Kumis del campo"),
-        ("https://exitocol.vtexassets.com/arquivos/ids/4574282/QUESO-SANDUCHE-TAJADO-EXITO-MARCA-PROPIA-200-Gramo-424772_a.jpg", "Queso Sanduche ", 4600, 1, "El mejor queso sanduche"),
-        ("https://static.carrefour.es/hd_510x_/img_pim_food/193100_00_1.jpg", "Helado Chocolate", 12000, 1, "El mejor helado para disfrutar en familia"),
-        ("https://images.rappi.com.mx/products/977086784-1580932848675.png", "Mantequilla", 7000, 1, "La mejor matequilla para disfrutar en familia");
+        ("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3vKcjgVNV0DnWplH0bQzQswy-3bf-zhuphA&usqp=CAU", "Kumis", 2300, 1, "El mejor Kumis del campo",12),
+        ("https://exitocol.vtexassets.com/arquivos/ids/4574282/QUESO-SANDUCHE-TAJADO-EXITO-MARCA-PROPIA-200-Gramo-424772_a.jpg", "Queso Sanduche ", 4600, 1, "El mejor queso sanduche",5),
+        ("https://static.carrefour.es/hd_510x_/img_pim_food/193100_00_1.jpg", "Helado Chocolate", 12000, 1, "El mejor helado para disfrutar en familia",8),
+        ("https://images.rappi.com.mx/products/977086784-1580932848675.png", "Mantequilla", 7000, 1, "La mejor matequilla para disfrutar en familia",3);
           
-INSERT INTO producto(foto, nombre, precio, idnegocio, descripcion) 
-VALUES 	("https://www.fincasturisticasdelquindio.com/wp-content/uploads/2016/10/Comida-rapida-armenia-755x566.jpg", "Combo hamburgues", 15000, 2, "El mejor sabor de las hamburguesas"),
-		("https://cdn.kiwilimon.com/recetaimagen/13003/th5-640x426-5707.jpg", "Pizaa ruleta", 25000, 2, "El mejor sabor de las de las pizzas de papitas enpolvadas");
+INSERT INTO producto(foto, nombre, precio, idnegocio, descripcion,iva) 
+VALUES 	("https://www.fincasturisticasdelquindio.com/wp-content/uploads/2016/10/Comida-rapida-armenia-755x566.jpg", "Combo hamburgues", 15000, 2, "El mejor sabor de las hamburguesas",12),
+		("https://cdn.kiwilimon.com/recetaimagen/13003/th5-640x426-5707.jpg", "Pizaa ruleta", 25000, 2, "El mejor sabor de las de las pizzas de papitas enpolvadas",10);
         
         
 SELECT * FROM producto;

@@ -13,7 +13,7 @@ from model import users
 app = Flask(__name__)
 app.config["MYSQL_HOST"]="localhost"
 app.config["MYSQL_USER"]="root"
-app.config["MYSQL_PASSWORD"]="2003"
+app.config["MYSQL_PASSWORD"]=""
 app.config["MYSQL_DB"]="bd_click"
 mysql=MySQL(app)
 app.secret_key='mysecretKey'
@@ -42,7 +42,6 @@ class LoginUserControllers(MethodView):
         #donde almacenan los datos de la base de datos
         datos = ""
         #simulacion de espera en el back con 1.5 segundos
-        time.sleep(3)
         #config de json
         content = request.get_json()
         #traigo el objeto
@@ -50,14 +49,19 @@ class LoginUserControllers(MethodView):
         password = content.get("password")
         cur=mysql.connection.cursor()
         token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
-        cur.execute("""select nombre,apellido,email,administrador,clave from usuarios where email = %s""",([correo]))
+        cur.execute("""SELECT * FROM usuario 
+        WHERE correo = %s;""",([correo]))
+
         datos = cur.fetchall()
+        print("DATOS DE LA BASE DE DATOS: ",datos)
         datos = datos[0]
-        print(datos[2])
+        print("ESTE ES CORREO DE LA BD: ",datos[0])
         #se pasan los atributos al email y clave
-        email = datos[2]
-        clave = datos[4]
+        email = datos[1]
+        clave = datos[8]
         admin = datos[3]
+        print("ESTA LA CONTRASEÑA DE LA BD: ",datos[7])
+        #trim()
         print(datos[3])
         #GUARDAR EN UN DICCIONARIO LOS DATOS EMAIL Y CLAVE
         users[email] = {"contraseña":clave}
@@ -68,11 +72,11 @@ class LoginUserControllers(MethodView):
             contrasenaUser= users[correo]["contraseña"]
             #print("CONTRASEÑA USUARIO ",contrasenaUser)
             if bcrypt.checkpw(bytes(str(password), encoding='utf-8'),contrasenaUser.encode('utf-8')):
-                encoded_jwt = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=600), 'email': email,'admin': admin}, KEY_TOKEN_AUTH , algorithm='HS256')
+                encoded_jwt = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=600), 'email': email}, KEY_TOKEN_AUTH , algorithm='HS256')
                 #return print("EXITOSO")
-                return jsonify({"Status": "Login exitoso","token": encoded_jwt,"name":datos[1]}), 200
+                return jsonify({"status": "Login exitoso","token": encoded_jwt, "nombres":datos[1], "apellidos":datos[2], "id_usuario":datos[0]}), 200
             else:
-                return jsonify({"Status": "Login incorrecto 22"}), 400
+                return jsonify({"status": "Usuario y contraseña no validos"}), 400
         else:    
             return jsonify({"auth": False}), 400
 
@@ -155,25 +159,29 @@ class RegisterUserControllers(MethodView):
     def post(self):
         time.sleep(3)
         content = request.get_json()
-        email = content.get("email")
-        name = content.get("name")
+        nombres = content.get("nombres")
+        apellidos = content.get("apellidos")
+        tipoDocumento = content.get("tipoDocumento")
+        numDocumento = content.get("numeroDocumento")
+        numeroTel = content.get("numeroTelefono")
+        fechaNacimiento = content.get("fechaNacimiento")
+        correo = content.get("email")
         password = content.get("password")
-        lastname = content.get("lastname")
+        
         print(password)
         #se acripta el password, se obtiene el hash
         salt = bcrypt.gensalt()
         hash_password = bcrypt.hashpw(bytes(str(password), encoding= 'utf-8'), salt)
         print("ENCRIPTADA: ",hash_password)
         cur=mysql.connection.cursor()
-        cur.execute("""
-        insert into usuarios
-        (nombre,apellido,email,clave)
-        values
-        (%s,%s,%s,%s);
-        """,(name,lastname,email,hash_password))
+        cur.execute("""INSERT INTO usuario
+        (correo, nombres, apellidos, tipodoc, 
+        numerodoc, numtelefono, fechanac, pass)
+        VALUES(%s, %s, %s, %s, %s, %s, %s, %s);
+        """,(correo, nombres, apellidos, tipoDocumento, numDocumento, numeroTel, fechaNacimiento,  hash_password))
         mysql.connection.commit()
         cur.close()
-        return jsonify({"Register ok": True}),200
+        return jsonify({"Nombres":nombres, "Apellidos":apellidos, "Tipo Documemto":tipoDocumento, "Numero de documento":numDocumento, "Numero Telefono":numeroTel, "Fecha Nacimiento":fechaNacimiento, "Correo":correo, "Register ok": True,  }),200
 
 class Productos(MethodView):
     def get(self):

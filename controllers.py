@@ -49,8 +49,7 @@ class LoginUserControllers(MethodView):
         password = content.get("password")
         cur=mysql.connection.cursor()
         token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
-        cur.execute("""SELECT correo, nombres, apellidos, tipodoc, 
-        numerodoc, numtelefono, fechanac, pass FROM usuario 
+        cur.execute("""SELECT * FROM usuario 
         WHERE correo = %s;""",([correo]))
 
         datos = cur.fetchall()
@@ -58,8 +57,8 @@ class LoginUserControllers(MethodView):
         datos = datos[0]
         print("ESTE ES CORREO DE LA BD: ",datos[0])
         #se pasan los atributos al email y clave
-        email = datos[0]
-        clave = datos[7]
+        email = datos[1]
+        clave = datos[8]
         admin = datos[3]
         print("ESTA LA CONTRASEÑA DE LA BD: ",datos[7])
         #trim()
@@ -75,7 +74,7 @@ class LoginUserControllers(MethodView):
             if bcrypt.checkpw(bytes(str(password), encoding='utf-8'),contrasenaUser.encode('utf-8')):
                 encoded_jwt = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=600), 'email': email}, KEY_TOKEN_AUTH , algorithm='HS256')
                 #return print("EXITOSO")
-                return jsonify({"status": "Login exitoso","token": encoded_jwt,"nombres":datos[1], "apellidos":datos[2]}), 200
+                return jsonify({"status": "Login exitoso","token": encoded_jwt, "nombres":datos[1], "apellidos":datos[2], "id_usuario":datos[0]}), 200
             else:
                 return jsonify({"status": "Usuario y contraseña no validos"}), 400
         else:    
@@ -120,14 +119,14 @@ class DatosEmpresaId(MethodView):
 class ProductosEmpresa(MethodView):
     def get(self):
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, foto, nombre, precio, idnegocio, descripcion FROM producto WHERE idnegocio=1;")
+        cur.execute("SELECT id, foto, nombre, precio, idnegocio, descripcion,iva FROM producto WHERE idnegocio=1;")
         productos = cur.fetchall()
         cur.close()
         datos = []
 
         content = {}
         for valor in productos: 
-            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3], 'idnegocio':valor[4], 'descripcion':valor[5]}
+            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3], 'idnegocio':valor[4], 'descripcion':valor[5],'iva':valor[6]}
             datos.append(content)
             content = {}
         #print("DATO0S DE PRODUCTOS DESDE LA BD: ", datos)

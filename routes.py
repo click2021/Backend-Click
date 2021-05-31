@@ -26,4 +26,5 @@ user = {
     "ActualizarProducto":"/api/v02/user/updateProduct","update":updateProduct.as_view('update_product'),
     "delenteProduct":"/api/v02/user/deleteProduct","Productdelete":delete.as_view("delenteProduct_api"),
     "AgregarProduct":"/api/v02/user/agregar","insertProduct":agregar.as_view("agregar_api"),
+
 }

@@ -12,7 +12,6 @@ app.add_url_rule(user["data_empresa_id"], view_func=user["data_empresa_id_contro
 app.add_url_rule(user["producto_empresa"], view_func=user["producto_empresa_controllers"])
 app.add_url_rule(user["enviar_productos"],view_func=user["enviar_productos_controllers"])
 app.add_url_rule(user["registro_user"], view_func=user["user_registro_controllers"])
-app.add_url_rule(user["Register_empresa"],view_func=user["registerEmpresa_controllers"])
 app.add_url_rule(user["Productos_clients"],view_func=user["productos"])
 
 app.add_url_rule(user["Productos_clients_pedidos"],view_func=user["productosPedidos"])
@@ -21,3 +20,18 @@ app.add_url_rule(user["PedidosUser"],view_func=user["pedidosUsers"])
 app.add_url_rule(user["ActualizarProducto"],view_func=user["update"])
 app.add_url_rule(user["delenteProduct"],view_func=user["Productdelete"])
 app.add_url_rule(user["AgregarProduct"],view_func=user["insertProduct"])
+
+#modulo negocio
+app.add_url_rule(user["mostrar_negocios"],view_func=user["mostrarNegocios"])
+app.add_url_rule(user["mostrar_negocio_id"],view_func=user["mostrarNegocioId"])
+#app.add_url_rule(user["crear_negocio"],view_func=user["crearNegocio"])
+app.add_url_rule(user["Register_empresa"],view_func=user["registerEmpresa_controllers"])
+app.add_url_rule(user["actualizar_negocio"],view_func=user["actualizarNegocio"])
+app.add_url_rule(user["eliminar_negocio"],view_func=user["eliminarNegocio"])
+
+#modulo producto
+app.add_url_rule(user["mostrar_productos"],view_func=user["mostrarProductos"])
+app.add_url_rule(user["producto_id"],view_func=user["productoId"])
+app.add_url_rule(user["crear_producto"],view_func=user["crearProducto"])
+app.add_url_rule(user["actualizar_producto"],view_func=user["actualizarProducto"])
+app.add_url_rule(user["eliminar_producto"],view_func=user["eliminarProducto"])

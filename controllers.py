@@ -119,14 +119,14 @@ class DatosEmpresaId(MethodView):
 class ProductosEmpresa(MethodView):
     def get(self):
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, foto, nombre, precio, idnegocio, descripcion,iva FROM producto WHERE idnegocio=1;")
+        cur.execute("SELECT id, foto, nombre, precio, idnegocio, descripcion, iva FROM producto WHERE idnegocio=1;")
         productos = cur.fetchall()
         cur.close()
         datos = []
 
         content = {}
         for valor in productos: 
-            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3], 'idnegocio':valor[4], 'descripcion':valor[5],'iva':valor[6]}
+            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3], 'idnegocio':valor[4], 'descripcion':valor[5], 'iva':valor[6]}
             datos.append(content)
             content = {}
         #print("DATO0S DE PRODUCTOS DESDE LA BD: ", datos)

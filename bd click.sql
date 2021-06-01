@@ -41,6 +41,7 @@ CREATE TABLE `negocio` (
 
 INSERT INTO `negocio` VALUES (1,'El buen sazon','comida','una casa','7am a 8pm','12314','243252','elbuensazon@gmail.com',1,'https://i.pinimg.com/originals/c2/bf/8f/c2bf8fe358f491df2bc6ebc34057172f.jpg'),(2,'Papitas enpolvadas','Camida Rapida','Calarca','7am a 11pm','32664466','888445','papitasenpolvadas@gmail.com',1,'https://img.freepik.com/vector-gratis/deliciosa-comida-rapida-estilo-pop-art_24908-61615.jpg');
 
+SELECT * FROM negocio;
 
 
 CREATE TABLE `producto` (
@@ -50,6 +51,7 @@ CREATE TABLE `producto` (
   `precio` double NOT NULL,
   `idnegocio` int(11) NOT NULL,
   `descripcion` char(200) NOT NULL,
+  `iva` FLOAT NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idnegocio` (`idnegocio`),
   CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`idnegocio`) REFERENCES `negocio` (`id`)
@@ -57,8 +59,20 @@ CREATE TABLE `producto` (
 
 
 
-INSERT INTO `producto` VALUES (1,'https://s1.eestatic.com/2019/07/02/cocinillas/actualidad-gastronomica/actualidad_gastronomica_410720427_127098320_1280x1280.jpg',' Helado',15000,1,'Helado de bainilla'),(2,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRU9D8uE6wcGL_YZrnv17Ef0Xl0Xn1syHLkWg&usqp=CAU','Queso',5000,1,'El mejor queso, de la finca las golomdrinas'),(3,'https://comercialgalera.com/wp-content/uploads/2015/06/0320-1.jpg','Queso Crema',8000,1,'El mejor queso de la finca'),(4,'https://jumbocolombiafood.vteximg.com.br/arquivos/ids/238190-1000-1000/7707192032385.jpg','Leche de Coco',5000,1,'La mejor leche de coco'),(5,'https://admin.consumo.com.co/backend/admin/backend/web/archivosDelCliente/items/images/20200720084729-Lacteos-Refrigerados-Y-Congelados-Margarinas-y-Mantequillas-ESPARCIBLE-CAMPI-X-500-GR-PAISA-142202007200847293199.jpg','Mantequilla Campi',6000,1,'La mejor mantequilla del campo'),(6,'https://exitocol.vtexassets.com/arquivos/ids/5628097/Queso-Mozzarella-1231158_a.jpg','Queso Mozzarella',6000,1,'El mejor queso mozzarella del campo'),(7,'https://vixark.b-cdn.net/lp-i-i-g/yogur-griego-con-sabor-a-fresa-alpina-150g.jpg','Yogur Griego',3000,1,'Yogur griego de alpina'),(8,'https://vixark.b-cdn.net/lp-i-i-g/yogur-griego-con-sabor-a-mora-alpina-160g-arándanos,-granola.jpg','Yogur Griego',2500,1,'Yogur griego de alpina'),(9,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3vKcjgVNV0DnWplH0bQzQswy-3bf-zhuphA&usqp=CAU','Kumis',2300,1,'El mejor Kumis del campo'),(10,'https://exitocol.vtexassets.com/arquivos/ids/4574282/QUESO-SANDUCHE-TAJADO-EXITO-MARCA-PROPIA-200-Gramo-424772_a.jpg','Queso Sanduche',4600,1,'El mejor queso sanduche'),(11,'https://static.carrefour.es/hd_510x_/img_pim_food/193100_00_1.jpg','Helado Chocolate',12000,1,'El mejor helado para disfrutar en familia'),(12,'https://images.rappi.com.mx/products/977086784-1580932848675.png','Mantequilla',7000,1,'La mejor matequilla para disfrutar en familia'),(13,'https://www.fincasturisticasdelquindio.com/wp-content/uploads/2016/10/Comida-rapida-armenia-755x566.jpg','Combo hamburgues',15000,2,'El mejor sabor de las hamburguesas'),(14,'https://cdn.kiwilimon.com/recetaimagen/13003/th5-640x426-5707.jpg','Pizaa ruleta',25000,2,'El mejor sabor de las de las pizzas de papitas enpolvadas');
-
+INSERT INTO producto(foto, nombre, precio, idnegocio, descripcion, iva) 
+VALUES 	("https://s1.eestatic.com/2019/07/02/cocinillas/actualidad-gastronomica/actualidad_gastronomica_410720427_127098320_1280x1280.jpg"," Helado", 15000, 1,"Helado de bainilla",10),
+		("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRU9D8uE6wcGL_YZrnv17Ef0Xl0Xn1syHLkWg&usqp=CAU", "Queso", 5000, 1, "El mejor queso, de la finca las golomdrinas",12),
+        ("https://comercialgalera.com/wp-content/uploads/2015/06/0320-1.jpg", "Queso Crema", 8000, 1, "El mejor queso de la finca",13),
+        ("https://jumbocolombiafood.vteximg.com.br/arquivos/ids/238190-1000-1000/7707192032385.jpg", "Leche de Coco", 5000, 1, "La mejor leche de coco",12),
+		("https://admin.consumo.com.co/backend/admin/backend/web/archivosDelCliente/items/images/20200720084729-Lacteos-Refrigerados-Y-Congelados-Margarinas-y-Mantequillas-ESPARCIBLE-CAMPI-X-500-GR-PAISA-142202007200847293199.jpg", "Mantequilla Campi", 6000, 1, "La mejor mantequilla del campo",12),
+        ("https://exitocol.vtexassets.com/arquivos/ids/5628097/Queso-Mozzarella-1231158_a.jpg", "Queso Mozzarella", 6000, 1, "El mejor queso mozzarella del campo",14),
+        ("https://vixark.b-cdn.net/lp-i-i-g/yogur-griego-con-sabor-a-fresa-alpina-150g.jpg", "Yogur", 3000, 1, "Yogur griego de alpina",6),
+        ("https://vixark.b-cdn.net/lp-i-i-g/yogur-griego-con-sabor-a-mora-alpina-160g-arándanos,-granola.jpg", "Yogur Griego", 2500, 1, "Yogur griego de alpina",12),
+        
+        ("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3vKcjgVNV0DnWplH0bQzQswy-3bf-zhuphA&usqp=CAU", "Kumis", 2300, 1, "El mejor Kumis del campo",12),
+        ("https://exitocol.vtexassets.com/arquivos/ids/4574282/QUESO-SANDUCHE-TAJADO-EXITO-MARCA-PROPIA-200-Gramo-424772_a.jpg", "Queso Sanduche ", 4600, 1, "El mejor queso sanduche",5),
+        ("https://static.carrefour.es/hd_510x_/img_pim_food/193100_00_1.jpg", "Helado Chocolate", 12000, 1, "El mejor helado para disfrutar en familia",8),
+        ("https://images.rappi.com.mx/products/977086784-1580932848675.png", "Mantequilla", 7000, 1, "La mejor matequilla para disfrutar en familia",3);
 
 
 CREATE TABLE `pedidos` (
@@ -66,7 +80,8 @@ CREATE TABLE `pedidos` (
   `idnegocio` int(11) DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   `idusuario` int(11) DEFAULT NULL,
-  `valor` float DEFAULT NULL,
+  `valor` FLOAT DEFAULT NULL,
+  `iva` FLOAT NOT NULL,
   `estado` char(1) DEFAULT NULL,
   PRIMARY KEY (`idpedido`),
   KEY `idusuario` (`idusuario`),

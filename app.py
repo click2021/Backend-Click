@@ -1,4 +1,3 @@
-
 from flask import Flask
 from routes import *
 from flask_cors import CORS

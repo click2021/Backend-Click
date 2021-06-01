@@ -1,60 +1,65 @@
 CREATE SCHEMA bd_click; 
 USE bd_click;
 
-CREATE TABLE usuario (
-id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-correo VARCHAR(200) UNIQUE NOT NULL, 
-nombres CHAR(40) NOT NULL,
-apellidos CHAR(40) NOT NULL,
-tipodoc CHAR(2) NOT NULL,
-numerodoc CHAR(10)NOT NULL,
-fechanac DATE NOT NULL,
-pass TEXT NOT NULL
+CREATE TABLE `usuario` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `correo` varchar(200) NOT NULL,
+  `nombres` char(40) NOT NULL,
+  `apellidos` char(40) NOT NULL,
+  `tipodoc` char(2) NOT NULL,
+  `numerodoc` char(10) NOT NULL,
+  `fechanac` date NOT NULL,
+  `numtelefono` CHAR(10) NOT NULL,
+  `pass` text NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `correo` (`correo`)
 );
 
-INSERT INTO usuario(correo, nombres, apellidos, tipodoc, numerodoc, fechanac, pass) 
-VALUES 	("maicolhernandez420@gmail.com", "Maicol Fernando", "Hernandez Peralta", "CC", "1005367685", "2001-05-16", "djl3j2l4jdl3"),
-		("maicolgomez420@gmail.com", "maicol", "hernandez gomez", "CC", "4566600", "1999-06-28", "jalñskañskdsk456" );
+INSERT INTO usuario(correo, nombres, apellidos, tipodoc, numerodoc, fechanac, numtelefono, pass) 
+VALUES	('maicol@gmail.com', 'Maicol Fernando', 'Hernandez Peralta', 'CC', '1005367685', '2001-05-16', '30465625', 'djl3j2l4jdl3'),('maicolgomez420@gmail.com','maicol','hernandez gomez','CC','4566600','1999-06-28','312645577','jalñskañskdsk456');
+
+SELECT * FROM usuario;
 
 
-CREATE TABLE negocio (
-id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-nombrenegocio CHAR(50) NOT NULL,
-tipo CHAR(40) NOT NULL,
-direccion VARCHAR(200) NOT NULL,
-horarios VARCHAR(100) NOT NULL,
-telefono1 CHAR(10) NOT NULL ,
-telefono2 CHAR(10) NOT NULL,
-correo VARCHAR(200) UNIQUE NOT NULL,
-idusuario INT NOT NULL,
-logo TEXT NOT NULL,
-FOREIGN KEY (idusuario) REFERENCES usuario(id)
+CREATE TABLE `negocio` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombrenegocio` char(50) NOT NULL,
+  `tipo` char(40) NOT NULL,
+  `direccion` varchar(200) NOT NULL,
+  `horarios` varchar(100) NOT NULL,
+  `telefono1` char(10) NOT NULL,
+  `telefono2` char(10) NOT NULL,
+  `correo` varchar(200) NOT NULL,
+  `idusuario` int(11) NOT NULL,
+  `logo` text NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `correo` (`correo`),
+  KEY `idusuario` (`idusuario`),
+  CONSTRAINT `negocio_ibfk_1` FOREIGN KEY (`idusuario`) REFERENCES `usuario` (`id`)
 );
 
 
-INSERT INTO negocio(nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo) 
-VALUES 	("El buen sazon", "comida", "una casa", "7am a 8pm", "12314", "243252", "elbuensazon@gmail.com", 1, "https://i.pinimg.com/originals/c2/bf/8f/c2bf8fe358f491df2bc6ebc34057172f.jpg"),
-		("Papitas enpolvadas", "Camida Rapida", "Calarca", "7am a 11pm", "32664466", "888445", "papitasenpolvadas@gmail.com", 1, "https://img.freepik.com/vector-gratis/deliciosa-comida-rapida-estilo-pop-art_24908-61615.jpg");
-
-SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio
-WHERE id=1;
-
+INSERT INTO `negocio` VALUES (1,'El buen sazon','comida','una casa','7am a 8pm','12314','243252','elbuensazon@gmail.com',1,'https://i.pinimg.com/originals/c2/bf/8f/c2bf8fe358f491df2bc6ebc34057172f.jpg'),(2,'Papitas enpolvadas','Camida Rapida','Calarca','7am a 11pm','32664466','888445','papitasenpolvadas@gmail.com',1,'https://img.freepik.com/vector-gratis/deliciosa-comida-rapida-estilo-pop-art_24908-61615.jpg');
 
 SELECT * FROM negocio;
 
-CREATE TABLE producto (
-id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-foto TEXT NOT NULL,
-nombre CHAR(60) NOT NULL,
-precio DOUBLE NOT NULL,
-idnegocio INT NOT NULL,
-descripcion CHAR(200) NOT NULL,
-iva float not null,
-FOREIGN KEY (idnegocio) REFERENCES negocio(id)
+
+CREATE TABLE `producto` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `foto` text NOT NULL,
+  `nombre` char(60) NOT NULL,
+  `precio` double NOT NULL,
+  `idnegocio` int(11) NOT NULL,
+  `descripcion` char(200) NOT NULL,
+  `iva` FLOAT NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idnegocio` (`idnegocio`),
+  CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`idnegocio`) REFERENCES `negocio` (`id`)
 );
 
 
-INSERT INTO producto(foto, nombre, precio, idnegocio, descripcion,iva) 
+
+INSERT INTO producto(foto, nombre, precio, idnegocio, descripcion, iva) 
 VALUES 	("https://s1.eestatic.com/2019/07/02/cocinillas/actualidad-gastronomica/actualidad_gastronomica_410720427_127098320_1280x1280.jpg"," Helado", 15000, 1,"Helado de bainilla",10),
 		("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRU9D8uE6wcGL_YZrnv17Ef0Xl0Xn1syHLkWg&usqp=CAU", "Queso", 5000, 1, "El mejor queso, de la finca las golomdrinas",12),
         ("https://comercialgalera.com/wp-content/uploads/2015/06/0320-1.jpg", "Queso Crema", 8000, 1, "El mejor queso de la finca",13),
@@ -68,88 +73,36 @@ VALUES 	("https://s1.eestatic.com/2019/07/02/cocinillas/actualidad-gastronomica/
         ("https://exitocol.vtexassets.com/arquivos/ids/4574282/QUESO-SANDUCHE-TAJADO-EXITO-MARCA-PROPIA-200-Gramo-424772_a.jpg", "Queso Sanduche ", 4600, 1, "El mejor queso sanduche",5),
         ("https://static.carrefour.es/hd_510x_/img_pim_food/193100_00_1.jpg", "Helado Chocolate", 12000, 1, "El mejor helado para disfrutar en familia",8),
         ("https://images.rappi.com.mx/products/977086784-1580932848675.png", "Mantequilla", 7000, 1, "La mejor matequilla para disfrutar en familia",3);
-          
-INSERT INTO producto(foto, nombre, precio, idnegocio, descripcion,iva) 
-VALUES 	("https://www.fincasturisticasdelquindio.com/wp-content/uploads/2016/10/Comida-rapida-armenia-755x566.jpg", "Combo hamburgues", 15000, 2, "El mejor sabor de las hamburguesas",12),
-		("https://cdn.kiwilimon.com/recetaimagen/13003/th5-640x426-5707.jpg", "Pizaa ruleta", 25000, 2, "El mejor sabor de las de las pizzas de papitas enpolvadas",10);
-        
-        
-SELECT * FROM producto;
 
-SELECT id, foto, nombre, precio, idnegocio, descripcion FROM producto
-WHERE idnegocio = 1 AND id = 2;
 
-/*
-CREATE TABLE comprador (
-id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-nombres CHAR(40) NOT NULL,
-apellidos CHAR(40) NOT NULL,
-telefono CHAR(11) NOT NULL,
-correo VARCHAR(200) NOT NULL UNIQUE,
-direccion VARCHAR(200) NOT NULL,
-idnegocio INT NOT NULL
-FOREIGN KEY (idnegocio) REFERENCES negocio(id)
+CREATE TABLE `pedidos` (
+  `idpedido` int(11) NOT NULL AUTO_INCREMENT,
+  `idnegocio` int(11) DEFAULT NULL,
+  `fecha` datetime DEFAULT NULL,
+  `idusuario` int(11) DEFAULT NULL,
+  `valor` FLOAT DEFAULT NULL,
+  `iva` FLOAT NOT NULL,
+  `estado` char(1) DEFAULT NULL,
+  PRIMARY KEY (`idpedido`),
+  KEY `idusuario` (`idusuario`),
+  KEY `idnegocio` (`idnegocio`),
+  CONSTRAINT `pedidos_ibfk_1` FOREIGN KEY (`idusuario`) REFERENCES `usuario` (`id`),
+  CONSTRAINT `pedidos_ibfk_2` FOREIGN KEY (`idnegocio`) REFERENCES `negocio` (`id`)
 );
-*/
 
 
 
-SELECT * FROM negocio;
-
-/*
-INSERT INTO comprador(nombres, apellidos, telefono, correo, direccion, idnegocio)
-VALUES	("MAICOL FERNANDO", "HERNANDEZ PERALTA", "16664455", "maicolhernandez420@gmail.com", "una casa", 1),
-		("maicol", "hernandez gomez", "4566600", "maicolgomez420@gmail.com", "una casa", 1),
-        ("Juan Sebastian", "Pulgarin Quintero", "463000", "juanpulgarin23@gmail.com", "Armenia", 2),
-       ("Camilo", "Aguja Chico", "camiloaguja44@gmail.com", "
-       5551221", "Armenia", 2); */
-
-SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio
-WHERE id = 1;        
-         
-/*
-CREATE TABLE pedidos (
-id INT AUTO_INCREMENT NOT NULL 
+CREATE TABLE `detalles_pedidos` (
+  `iddetallep` int(11) NOT NULL AUTO_INCREMENT,
+  `idpedido` int(11) NOT NULL,
+  `idproducto` int(11) NOT NULL,
+  `cantidad` int(11) DEFAULT NULL,
+  `valorunit` float DEFAULT NULL,
+  PRIMARY KEY (`iddetallep`),
+  KEY `idpedido` (`idpedido`),
+  KEY `idproducto` (`idproducto`),
+  CONSTRAINT `detalles_pedidos_ibfk_1` FOREIGN KEY (`idpedido`) REFERENCES `pedidos` (`idpedido`),
+  CONSTRAINT `detalles_pedidos_ibfk_2` FOREIGN KEY (`idproducto`) REFERENCES `producto` (`id`)
 );
-*/
 
-/*
-CREATE TABLE detalles_pedidos(
-id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-idproducto INT NOT NULL,
-idpedido INT NOT NULL,
-FOREIGN KEY (idpedido) REFERENCES pedidos(id),
-FOREIGN KEY (idproducto) REFERENCES producto(id)
-);*/
-/*
-CREATE TABLE detallesnegocio(
-id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-idnegocio INT NOT NULL,
-idpedido INT NOT NULL,
-FOREIGN KEY (idnegocio) REFERENCES negocio(id),
-FOREIGN KEY (idpedido) REFERENCES pedidos(id)
-);*/
-
-SELECT * FROM producto;
-/*
-INSERT INTO detalles_pedidos(idpedido, idproducto) 
-VALUES	(3, 13),
-		(3, 13),
-		(3, 14),
-        (1, 4),
-        (1, 2),
-producto        (4, 13),
-        (4, 14);
-      
-*/
-
-SELECT * FROM producto;
-
-SELECT * FROM negocio;
-
-/*
-SELECT n.idempresario, n.id, n.nombrenegocio, pro.nombre as nombre_producto, pro.idnegocio as id_producto 
-FROM negocio n, producto pro, pedidos p
-WHERE n.id=pro.idnegocio and n.id=p.idnegocio;
-*/
 

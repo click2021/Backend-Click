@@ -13,7 +13,7 @@ from model import users
 app = Flask(__name__)
 app.config["MYSQL_HOST"]="localhost"
 app.config["MYSQL_USER"]="root"
-app.config["MYSQL_PASSWORD"]=""
+app.config["MYSQL_PASSWORD"]="2003"
 app.config["MYSQL_DB"]="bd_click"
 mysql=MySQL(app)
 app.secret_key='mysecretKey'
@@ -55,12 +55,12 @@ class LoginUserControllers(MethodView):
         datos = cur.fetchall()
         print("DATOS DE LA BASE DE DATOS: ",datos)
         datos = datos[0]
-        print("ESTE ES CORREO DE LA BD: ",datos[1])
+        print("ESTE ES CORREO DE LA BD: ",datos[0])
         #se pasan los atributos al email y clave
         email = datos[1]
         clave = datos[8]
         admin = datos[3]
-        print("ESTA LA CONTRASEÑA DE LA BD: ",datos[8])
+        print("ESTA LA CONTRASEÑA DE LA BD: ",datos[7])
         #trim()
         print(datos[3])
         #GUARDAR EN UN DICCIONARIO LOS DATOS EMAIL Y CLAVE
@@ -74,16 +74,16 @@ class LoginUserControllers(MethodView):
             if bcrypt.checkpw(bytes(str(password), encoding='utf-8'),contrasenaUser.encode('utf-8')):
                 encoded_jwt = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=600), 'email': email}, KEY_TOKEN_AUTH , algorithm='HS256')
                 #return print("EXITOSO")
-                return jsonify({"auth": True, "nombres":datos[2], "apellidos":datos[3], "correo":datos[1], "tipo_documento":datos[4], "numero_documento":datos[5], "fecha_nacimiento":datos[6], "numero_telefono":datos[7], "id_usuario":datos[0], "token": encoded_jwt}), 200
+                return jsonify({"status": "Login exitoso","token": encoded_jwt, "nombres":datos[1], "apellidos":datos[2], "id_usuario":datos[0]}), 200
             else:
-                return jsonify({"status": "Usuario y contraseña no validos"}), 403
+                return jsonify({"status": "Usuario y contraseña no validos"}), 400
         else:    
-            return jsonify({"auth": False}), 401
+            return jsonify({"auth": False}), 400
 
 class DatosEmpresa(MethodView):
     def get(self):
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio")
+        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio;")
         negocios = cur.fetchall()
         cur.close()
         datos = []
@@ -181,7 +181,7 @@ class RegisterUserControllers(MethodView):
         """,(correo, nombres, apellidos, tipoDocumento, numDocumento, numeroTel, fechaNacimiento,  hash_password))
         mysql.connection.commit()
         cur.close()
-        return jsonify({"Registro ok": True, "Nombres":nombres, "Apellidos":apellidos, "Tipo Documemto":tipoDocumento, "Numero de documento":numDocumento, "Numero Telefono":numeroTel, "Fecha Nacimiento":fechaNacimiento, "Correo":correo,   }),200
+        return jsonify({"Nombres":nombres, "Apellidos":apellidos, "Tipo Documemto":tipoDocumento, "Numero de documento":numDocumento, "Numero Telefono":numeroTel, "Fecha Nacimiento":fechaNacimiento, "Correo":correo, "Register ok": True,  }),200
 
 class Productos(MethodView):
     def get(self):
@@ -319,7 +319,7 @@ class agregar(MethodView):
 class MostrarNegocios(MethodView):
     def get(self):
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio WHERE idusuario = 1;")
+        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio ;")
         negocios = cur.fetchall()
         cur.close()
         datos = []
@@ -371,8 +371,6 @@ class RegisterEmpresaControllers(MethodView):
         cur.close()
         return jsonify({"data": True}),200
 
-#class CrearNegocio(MethodView):
-    #def post(self):
 
 
 class ActualizarNegocio(MethodView):

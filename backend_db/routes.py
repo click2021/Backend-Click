@@ -15,8 +15,6 @@ user = {
     "enviar_productos":"/api/v01/user/enviarproductos", "enviar_productos_controllers":EnviarProductos.as_view("enviar_productos"),
     
     "registro_user": "/api/v01/user/registro", "user_registro_controllers": RegisterUserControllers.as_view("registro_user"),
-
-    "Register_empresa": "/api/v01/user/registerEmpresa", 
     
     "Productos_clients":"/api/v01/user/product","productos":Productos.as_view("productos_api"),
     "Productos_clients_pedidos":"/api/v01/user/getInfo","productosPedidos":PedidosUserControllers.as_view("pedidos"),
@@ -28,11 +26,11 @@ user = {
 
     #modulo negocio
     "mostrar_negocios":"/api/v02/user/mostrarNegocios","mostrarNegocios":MostrarNegocios.as_view("mostrar_negocios_api"),
-    #"crear_negocio":"/api/v02/user/crearNegocio","crearNegocio": .as_view("crear_negocio_api")
-    "registerEmpresa_controllers":RegisterEmpresaControllers.as_view("registerEmpresa_api"),
+    "register_empresa": "/api/v01/user/registerEmpresa","registerEmpresa_controllers": RegisterEmpresaControllers.as_view("registerEmpresa_api"),
     "mostrar_negocio_id":"/api/v02/user/mostrarNegocioId","mostrarNegocioId":MostrarNegocioId.as_view("mostrar_negocio_id_api"),
     "actualizar_negocio":"/api/v02/user/actualizarNegocio","actualizarNegocio":ActualizarNegocio.as_view("actualizar_negocio_api"),
     "eliminar_negocio":"/api/v02/user/eliminarNegocio","eliminarNegocio":EliminarNegocio.as_view("eliminar_negocio_api"),
+    
     #modulo producto
     "mostrar_productos":"/api/v02/user/mostrarProductos","mostrarProductos":MostrarProductosNegocio.as_view("mostrar_productos_api"),
     "producto_id":"/api/v02/user/productoId","productoId":ProductoId.as_view("producto_id_api"),

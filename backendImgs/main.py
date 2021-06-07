@@ -7,9 +7,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-UPLOAD_FOLD = '/archivos'
-UPLOAD_FOLDER = os.path.join(APP_ROOT, UPLOAD_FOLD)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 @app.route('/upload', methods = ['POST'])
 def upload_file():
     f = request.files['img']
@@ -23,6 +21,7 @@ def upload_file():
     except FileExistsError:
         f.save(os.path.join('imagenes/'+nombre, secure_filename(f.filename)))
         return 'file uploaded successfully'
+        
 
 
 @app.route('/imagenes/<string:filename>,<string:nameEmpresa>')

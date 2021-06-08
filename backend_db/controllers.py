@@ -8,6 +8,7 @@ import jwt
 from config import KEY_TOKEN_AUTH
 import datetime
 from model import users
+import json
 
 #configurar de la app
 app = Flask(__name__)
@@ -74,7 +75,7 @@ class LoginUserControllers(MethodView):
             if bcrypt.checkpw(bytes(str(password), encoding='utf-8'),contrasenaUser.encode('utf-8')):
                 encoded_jwt = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=600), 'email': email}, KEY_TOKEN_AUTH , algorithm='HS256')
                 #return print("EXITOSO")
-                return jsonify({"status": "Login exitoso", "id_usuario":datos[0], "correo":datos[1], "nombres":datos[2], "apellidos":datos[3], "tipo_documento":datos[4], "numero_documento":datos[5], "fecha_nacimiento":datos[6], "numero_telefono":datos[7], "token": encoded_jwt('utf-8')}), 200
+                return jsonify({"status": "Login exitoso", "id_usuario":datos[0], "correo":datos[1], "nombres":datos[2], "apellidos":datos[3], "tipo_documento":datos[4], "numero_documento":datos[5], "fecha_nacimiento":datos[6], "numero_telefono":datos[7], "token": encoded_jwt}), 200
             else:
                 return jsonify({"status": "Usuario y contraseña no validos"}), 400
         else:    
@@ -83,7 +84,7 @@ class LoginUserControllers(MethodView):
 class DatosEmpresa(MethodView):
     def get(self):
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio;")
+        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio where id = 1;")
         negocios = cur.fetchall()
         cur.close()
         datos = []

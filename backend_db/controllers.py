@@ -13,7 +13,7 @@ from model import users
 app = Flask(__name__)
 app.config["MYSQL_HOST"]="localhost"
 app.config["MYSQL_USER"]="root"
-app.config["MYSQL_PASSWORD"]="2003"
+app.config["MYSQL_PASSWORD"]=""
 app.config["MYSQL_DB"]="bd_click"
 mysql=MySQL(app)
 app.secret_key='mysecretKey'
@@ -55,12 +55,12 @@ class LoginUserControllers(MethodView):
         datos = cur.fetchall()
         print("DATOS DE LA BASE DE DATOS: ",datos)
         datos = datos[0]
-        print("ESTE ES CORREO DE LA BD: ",datos[0])
+        print("ESTE ES CORREO DE LA BD: ",datos[1])
         #se pasan los atributos al email y clave
         email = datos[1]
         clave = datos[8]
         admin = datos[3]
-        print("ESTA LA CONTRASEÑA DE LA BD: ",datos[7])
+        print("ESTA LA CONTRASEÑA DE LA BD: ",datos[8])
         #trim()
         print(datos[3])
         #GUARDAR EN UN DICCIONARIO LOS DATOS EMAIL Y CLAVE
@@ -74,7 +74,7 @@ class LoginUserControllers(MethodView):
             if bcrypt.checkpw(bytes(str(password), encoding='utf-8'),contrasenaUser.encode('utf-8')):
                 encoded_jwt = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=600), 'email': email}, KEY_TOKEN_AUTH , algorithm='HS256')
                 #return print("EXITOSO")
-                return jsonify({"status": "Login exitoso","token": encoded_jwt, "nombres":datos[1], "apellidos":datos[2], "id_usuario":datos[0]}), 200
+                return jsonify({"status": "Login exitoso", "id_usuario":datos[0], "correo":datos[1], "nombres":datos[2], "apellidos":datos[3], "tipo_documento":datos[4], "numero_documento":datos[5], "fecha_nacimiento":datos[6], "numero_telefono":datos[7], "token": encoded_jwt('utf-8')}), 200
             else:
                 return jsonify({"status": "Usuario y contraseña no validos"}), 400
         else:    

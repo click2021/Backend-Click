@@ -10,7 +10,7 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 @app.route('/upload', methods = ['POST'])
 def upload_file():
-    f = request.files['img']
+    f = request.files['logo']
     empresa  = request.form.get('nombreEmpresa')
     nombre = empresa.replace("  ","_")
     nombre = empresa.replace(" ","_")
@@ -24,12 +24,12 @@ def upload_file():
         
 
 
-@app.route('/imagenes/<string:filename>,<string:nameEmpresa>')
-def get_images(filename,nameEmpresa):
-    print("Nombre de la carpeta: ",nameEmpresa.replace(' ','_'))
+@app.route('/imagenes/<string:filename>, <string:nameEmpresa>')
+def get_images(filename, nameEmpresa):
+    print("Nombre de la carpeta: ", nameEmpresa.replace(' ','_'))
     print("Nombre del logo: ",filename.replace(' ','_'))
     return send_from_directory(os.getcwd() + "/imagenes/"+nameEmpresa.replace(' ','_')+'/', path=filename.replace(' ','_'), as_attachment=False)
 
 
 if __name__ == '__main__':
-   app.run(debug = True,port= 8000,host='0.0.0.0')
+   app.run(debug = True, port= 8000, host='0.0.0.0')

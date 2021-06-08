@@ -22,10 +22,11 @@ app.add_url_rule(user["delenteProduct"],view_func=user["Productdelete"])
 app.add_url_rule(user["AgregarProduct"],view_func=user["insertProduct"])
 
 #modulo negocio
+app.add_url_rule(user["mostrar_todos_negocios"],view_func=user["negocios"])
+app.add_url_rule(user["mostrar_negocio"],view_func=user["negocio"])
 app.add_url_rule(user["mostrar_negocios"],view_func=user["mostrarNegocios"])
 app.add_url_rule(user["mostrar_negocio_id"],view_func=user["mostrarNegocioId"])
-#app.add_url_rule(user["crear_negocio"],view_func=user["crearNegocio"])
-app.add_url_rule(user["Register_empresa"],view_func=user["registerEmpresa_controllers"])
+app.add_url_rule(user["register_empresa"],view_func=user["registerEmpresa_controllers"])
 app.add_url_rule(user["actualizar_negocio"],view_func=user["actualizarNegocio"])
 app.add_url_rule(user["eliminar_negocio"],view_func=user["eliminarNegocio"])
 

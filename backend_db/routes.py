@@ -1,5 +1,5 @@
 from controllers import LoginUserControllers, RegisterUserControllers, Productos,app, PedidosUserControllers,ReservarUserControllers, DatosEmpresa, ProductosEmpresa, DatosEmpresaId
-from controllers import updateProduct, delete, EnviarProductos, PedidosUser, agregar, Pedido,RegisterEmpresaControllers, MostrarNegocios, MostrarNegocioId, RegisterEmpresaControllers, ActualizarNegocio, EliminarNegocio, MostrarProductosNegocio, ProductoId, CrearProducto, ActualizarProducto, EliminarProducto
+from controllers import updateProduct, delete, EnviarProductos, PedidosUser, agregar, Pedido,RegisterEmpresaControllers, MostrarNegocios, MostrarNegocioId, RegisterEmpresaControllers, ActualizarNegocio, EliminarNegocio, MostrarProductosNegocio, ProductoId, CrearProducto, ActualizarProducto, EliminarProducto, MostrarTodosLosNegocios, MostrarNegocio
 
 
 
@@ -25,7 +25,9 @@ user = {
     "AgregarProduct":"/api/v02/user/agregar","insertProduct":agregar.as_view("agregar_api"),
 
     #modulo negocio
+    "mostrar_todos_negocios":"/api/v02/user/negocios","negocios":MostrarTodosLosNegocios.as_view("negocios_api"),
     "mostrar_negocios":"/api/v02/user/mostrarNegocios","mostrarNegocios":MostrarNegocios.as_view("mostrar_negocios_api"),
+    "mostrar_negocio":"/api/v02/user/negocio","negocio":MostrarNegocio.as_view("negocio_api"),
     "register_empresa": "/api/v01/user/registerEmpresa","registerEmpresa_controllers": RegisterEmpresaControllers.as_view("registerEmpresa_api"),
     "mostrar_negocio_id":"/api/v02/user/mostrarNegocioId","mostrarNegocioId":MostrarNegocioId.as_view("mostrar_negocio_id_api"),
     "actualizar_negocio":"/api/v02/user/actualizarNegocio","actualizarNegocio":ActualizarNegocio.as_view("actualizar_negocio_api"),

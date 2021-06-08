@@ -21,7 +21,7 @@ app.secret_key='mysecretKey'
 
 class Pedido(MethodView):
     def post(self):
-        time.sleep(3)
+        #time.sleep(3)
         content = request.get_json()
         nombres = content.get("nombres")
         apellidos = content.get("apellidos")
@@ -157,7 +157,6 @@ class EnviarProductos(MethodView):
 
 class RegisterUserControllers(MethodView):
     def post(self):
-        time.sleep(3)
         content = request.get_json()
         nombres = content.get("nombres")
         apellidos = content.get("apellidos")
@@ -179,9 +178,13 @@ class RegisterUserControllers(MethodView):
         numerodoc, numtelefono, fechanac, pass)
         VALUES(%s, %s, %s, %s, %s, %s, %s, %s);
         """,(correo, nombres, apellidos, tipoDocumento, numDocumento, numeroTel, fechaNacimiento,  hash_password))
-        mysql.connection.commit()
-        cur.close()
-        return jsonify({"Nombres":nombres, "Apellidos":apellidos, "Tipo Documemto":tipoDocumento, "Numero de documento":numDocumento, "Numero Telefono":numeroTel, "Fecha Nacimiento":fechaNacimiento, "Correo":correo, "Register ok": True,  }),200
+        if (correo):
+            #mysql.connection.commit()
+            print("mysql.connection.commit(): ", mysql.connection.commit() )
+            #cur.close()
+            return jsonify({"Registro ok": True, "Nombres":nombres, "Apellidos":apellidos, "Tipo Documemto":tipoDocumento, "Numero de documento":numDocumento, "Numero Telefono":numeroTel, "Fecha Nacimiento":fechaNacimiento, "Correo":correo,   }),200
+        else:
+            return jsonify({"status":"El correo ya existe"}), 403
 
 class Productos(MethodView):
     def get(self):

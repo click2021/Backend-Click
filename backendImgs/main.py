@@ -10,7 +10,7 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 @app.route('/upload', methods = ['POST'])
 def upload_file():
-    f = request.files['logo']
+    f = request.files['img']
     empresa  = request.form.get('nombreEmpresa')
     nombre = empresa.replace("  ","_")
     nombre = empresa.replace(" ","_")
@@ -22,7 +22,6 @@ def upload_file():
         f.save(os.path.join('imagenes/'+nombre, secure_filename(f.filename)))
         return 'file uploaded successfully'
         
-
 
 @app.route('/imagenes/<string:filename>, <string:nameEmpresa>')
 def get_images(filename, nameEmpresa):

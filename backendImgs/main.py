@@ -7,28 +7,28 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-
+  
 @app.route('/upload', methods = ['POST'])
 def upload_file():
     f = request.files['img']
-    empresa  = request.form.get('nombreEmpresa')
-    nombre = empresa.replace("  ","_")
-    nombre = empresa.replace(" ","_")
+    negocio  = request.form.get('nombreEmpresa')
+    print(negocio)
     try:
-      os.mkdir('imagenes/'+nombre)
-      f.save(os.path.join('imagenes/'+nombre, secure_filename(f.filename)))
-      return jsonify({'status':'file uploaded successfully'}),200
+      os.mkdir('imagenes/logo/')
+      print("negocio: ", negocio)
+      f.save(os.path.join("imagenes/logo/",secure_filename(negocio+"_imagen.png")))
+      img = negocio+"_imagen.png"
+      return jsonify({"img": img})
     except FileExistsError:
-        f.save(os.path.join('imagenes/'+nombre, secure_filename(f.filename)))
-        return 'file uploaded successfully'
-        
+      f.save(os.path.join("imagenes/logo/",secure_filename(negocio+"_imagen.png")))
+      img = negocio+"_imagen.png"
+      return jsonify({"img": img})
 
 
-@app.route('/imagenes/<string:filename>,<string:nameEmpresa>')
-def get_images(filename,nameEmpresa):
-    print("Nombre de la carpeta: ",nameEmpresa.replace(' ','_'))
-    print("Nombre del logo: ",filename.replace(' ','_'))
-    return send_from_directory(os.getcwd() + "/imagenes/"+nameEmpresa.replace(' ','_')+'/', path=filename.replace(' ','_'), as_attachment=False)
+
+@app.route('/imagenes/<string:name>')
+def get_images(name):
+    return (send_from_directory(os.getcwd()+"/imagenes/logo/",name))
 
 
 if __name__ == '__main__':

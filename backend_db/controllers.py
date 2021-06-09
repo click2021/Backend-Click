@@ -83,7 +83,7 @@ class LoginUserControllers(MethodView):
 class DatosEmpresa(MethodView):
     def get(self):
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio where id = 1;")
+        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio;")
         negocios = cur.fetchall()
         cur.close()
         datos = []

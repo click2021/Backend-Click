@@ -26,9 +26,9 @@ def upload_file():
 
 
 
-@app.route('/imagenes/<string:filename>')
-def get_images(filename):
-    return send_from_directory(os.getcwd()+"/imagenes/logo/",filename=filename,as_attachment=False)
+@app.route('/imagenes/<string:name>')
+def get_images(name):
+    return (send_from_directory(os.getcwd()+"/imagenes/logo/",name))
 
 
 if __name__ == '__main__':

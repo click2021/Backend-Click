@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-
+  
 @app.route('/upload', methods = ['POST'])
 def upload_file():
     f = request.files['img']
@@ -28,7 +28,7 @@ def upload_file():
 
 @app.route('/imagenes/<string:filename>')
 def get_images(filename):
-    return send_from_directory(os.getcwd() + "/imagenes/logo/",path=filename.replace(' ','_'), as_attachment=False)
+    return send_from_directory(os.getcwd()+"/imagenes/logo/",filename=filename,as_attachment=False)
 
 
 if __name__ == '__main__':

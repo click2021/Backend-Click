@@ -432,13 +432,10 @@ class ActualizarNegocio(MethodView):
 
 class EliminarNegocio(MethodView):
     def delete(self):
-        #try:
         id_negocio = request.args.get('id')
-        print(id_negocio)
+        print("ELIMINAR ",id_negocio)
         cur = mysql.connection.cursor()
-        cur.execute("""
-        DELETE negocio WHERE id = %s;
-        """,([id_negocio]))
+        cur.execute('DELETE FROM negocio WHERE id = %s;',([int(id_negocio)]))
         mysql.connection.commit()
         cur.close()
         return jsonify({"data": "Se ha eliminado el negocio exitosamente"}),200
@@ -464,7 +461,7 @@ class MostrarProductosNegocio(MethodView):
 class ProductoId(MethodView):
     def get(self):
         id_producto = request.args.get('id')
-        print(id_producto)
+        #print(id_producto)
         cur = mysql.connection.cursor()
         cur.execute("SELECT id, foto, nombre, precio, descripcion FROM producto WHERE id = %s;",([id_producto]))
         producto = cur.fetchall()

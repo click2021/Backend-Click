@@ -1,4 +1,4 @@
-CREATE SCHEMA bd_click; 
+1CREATE SCHEMA bd_click; 
 USE bd_click;
 
 CREATE TABLE `usuario` (

@@ -39,6 +39,7 @@ CREATE TABLE `negocio` (
   CONSTRAINT `negocio_ibfk_1` FOREIGN KEY (`idusuario`) REFERENCES `usuario` (`id`)
 );
 
+SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio;
 
 INSERT INTO `negocio`(nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo) 
 VALUES ('El buen sazon','comida','una casa','7am a 8pm','12314','243252','elbuensazon@gmail.com',1,'https://i.pinimg.com/originals/c2/bf/8f/c2bf8fe358f491df2bc6ebc34057172f.jpg'),('Papitas enpolvadas','Camida Rapida','Calarca','7am a 11pm','32664466','888445','papitasenpolvadas@gmail.com',1,'https://img.freepik.com/vector-gratis/deliciosa-comida-rapida-estilo-pop-art_24908-61615.jpg');
@@ -89,7 +90,6 @@ CREATE TABLE `pedidos` (
   CONSTRAINT `pedidos_ibfk_1` FOREIGN KEY (`idusuario`) REFERENCES `usuario` (`id`),
   CONSTRAINT `pedidos_ibfk_2` FOREIGN KEY (`idnegocio`) REFERENCES `negocio` (`id`)
 );
-
 
 
 CREATE TABLE `detalles_pedidos` (

@@ -84,7 +84,7 @@ class LoginUserControllers(MethodView):
 class DatosEmpresa(MethodView):
     def get(self):
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio where id = 1;")
+        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio;")
         negocios = cur.fetchall()
         cur.close()
         datos = []
@@ -99,40 +99,40 @@ class DatosEmpresa(MethodView):
 class DatosEmpresaId(MethodView):
     def post(self):
         content = request.get_json()
-        id = content.get("id")
-        print("ID DEL FRONT:",id)
-        return jsonify({'data':id})
-    def get(self):
+        id = content.get("id")        
+        print("ID DEL FRONT:", id)
+
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idempresario, logo FROM negocio WHERE id = 1;")
-        negocio = cur.fetchall()
-        cur.close()
-        datos = []
-        content = {}
-        for valor in negocio:
-             content = {'id':valor[0], 'nombre':valor[1], 'tipo':valor[2], 'direccion':valor[3], 'horarios':valor[4], 'telefono1':valor[5], 'telefono2':valor[6], 'correo':valor[7], 'id_cliente':valor[8], 'imgLogo':valor[9]}
-             datos.append(content)
-             content = {}
-        cur.close()
-        return jsonify({"ok":True, "data":datos}),200
+        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio WHERE id = %s;",[(id)])
+        datos = cur.fetchall()
+        print("ESTOS SON LOS DATOS DEL NEGOCIO: ", datos)
+        
+        datosNegocio = []
+        contentNegocio = {}
+        for data in datos:
+            contentNegocio = { 'id':data[0], 'nombre':data[1], 'tipo_negocio':data[2], 'direccion':data[3], 'horarios':data[4], 'telefono1':data[5], 'telefono2':data[6], 'correo':data[7], 'id_usuario': data[8], 'imgLogo':data[9] }
+            datosNegocio.append(contentNegocio)
+            return jsonify({'data':id, 'negocio_id':datosNegocio })
 
 
 class ProductosEmpresa(MethodView):
-    def get(self):
+    def post(self):
+        content = request.get_json()
+        id = content.get("id")
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, foto, nombre, precio, idnegocio, descripcion, iva FROM producto WHERE idnegocio=1;")
+        cur.execute("SELECT id, foto, nombre, precio, idnegocio, iva FROM producto WHERE idnegocio = %s;", [(id)])
         productos = cur.fetchall()
         cur.close()
         datos = []
 
         content = {}
         for valor in productos: 
-            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3], 'idnegocio':valor[4], 'descripcion':valor[5], 'iva':valor[6]}
+            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3], 'idnegocio':valor[4], 'iva':valor[5]}
             datos.append(content)
             content = {}
         #print("DATO0S DE PRODUCTOS DESDE LA BD: ", datos)
         
-        return jsonify({"ok":True,"data": datos})
+        return jsonify({"ok":True, "data": datos})
 
 
 
@@ -143,7 +143,7 @@ class EnviarProductos(MethodView):
         data = content.get("data")
         cur=mysql.connection.cursor()
         print("DATOS DEL FRONTEND:",data)
-        cur.execute('SELECT id, foto, nombre, precio, idnegocio, descripcion FROM producto WHERE idnegocio = 1 AND id = %s',([id]))
+        cur.execute('SELECT id, foto, nombre, precio, idnegocio, FROM producto WHERE idnegocio = 1 AND id = %s',([id]))
         datos = cur.fetchall()
         cur.close()
         #print("DATOS: ",datos)
@@ -195,7 +195,7 @@ class Productos(MethodView):
         payload = []
         content = {}
         for result in datos:
-            content = {'id':result[0],'nombre':result[1],'ulrImg':result[2]}
+            content = {'id':result[0], 'nombre':result[1], 'ulrImg':result[2]}
             payload.append(content)
             content = {}
         return jsonify({"datos": payload}),200
@@ -451,13 +451,13 @@ class MostrarProductosNegocio(MethodView):
         id_negocio = request.args.get('id')
         print(id_negocio)
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, foto, nombre, precio, descripcion FROM producto WHERE idnegocio = %s;",([id_negocio]))
+        cur.execute("SELECT id, foto, nombre, precio FROM producto WHERE idnegocio = %s;",([id_negocio]))
         productos = cur.fetchall()
         cur.close()
         datos = []
         content = {}
         for valor in productos:
-            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3], 'descripcion':valor[4]}
+            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3]}
             datos.append(content)
             content = {}
         return jsonify({"Obtener Productos": True, "data": datos}),200

@@ -349,6 +349,7 @@ class MostrarNegocios(MethodView):
 
 class MostrarNegocio(MethodView):
     def get(self):
+        time.sleep(3)
         id_negocio = request.args.get('id')
         print(id_negocio)
         cur = mysql.connection.cursor()
@@ -408,26 +409,26 @@ class RegisterEmpresaControllers(MethodView):
 
 class ActualizarNegocio(MethodView):
     def post(self):
-        #try:
-        content = request.get_json()
-        id_e = content.get("idn")
-        nombre = content.get("nombre")
-        tipo_empresa = content.get("tipo")
-        direccion = content.get("direccion")
-        telefono_principal = content.get("telefono1")
-        telefono_secundario = content.get("telefono2")
-        horarios = content.get("horarios")
-        correo = content.get("correo")
-        logo = content.get("logo")
-        #id_usuario = content.get("idUsuario")
-
-        cur = mysql.connection.cursor()
-        cur.execute("""
-        UPDATE negocio SET nombrenegocio = %s, tipo = %s, direccion = %s, horarios = %s, telefono1 = %s, telefono2 = %s, correo = %s, logo = %s
-        WHERE id = %s;""",(nombre, tipo_empresa, direccion, horarios, telefono_principal, telefono_secundario, correo, logo, id_e))
-        mysql.connection.commit()
-        cur.close()
-        return jsonify({"Se ha actualizado correctamente": True}),200
+        time.sleep(1)
+        try:
+            content = request.get_json()
+            id_e = content.get("idn")
+            nombre = content.get("nombre")
+            tipo_empresa = content.get("tipo")
+            direccion = content.get("direccion")
+            telefono_principal = content.get("telefono1")
+            telefono_secundario = content.get("telefono2")
+            horarios = content.get("horarios")
+            correo = content.get("correo")
+            cur = mysql.connection.cursor()
+            cur.execute("""
+            UPDATE negocio SET nombrenegocio = %s, tipo = %s, direccion = %s, horarios = %s, telefono1 = %s, telefono2 = %s, correo = %s
+            WHERE id = %s;""",(nombre, tipo_empresa, direccion, horarios, telefono_principal, telefono_secundario, correo, id_e))
+            mysql.connection.commit()
+            cur.close()
+            return jsonify({"Se ha actualizado correctamente": True}),200
+        except:
+            return jsonify({"static":False}),403
 
 class EliminarNegocio(MethodView):
     def delete(self):

@@ -49,7 +49,6 @@ class LoginUserControllers(MethodView):
         correo = content.get("email")
         password = content.get("password")
         cur=mysql.connection.cursor()
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
         cur.execute("""SELECT * FROM usuario 
         WHERE correo = %s;""",([correo]))
 
@@ -316,7 +315,7 @@ class agregar(MethodView):
         except:
             return jsonify({"datos": False}),403
 
-#MODULO NEGOCIO
+#MODULO NEGOCIOS
 
 #Mostrar negocios
 class MostrarTodosLosNegocios(MethodView):
@@ -333,11 +332,11 @@ class MostrarTodosLosNegocios(MethodView):
             datos.append(content)
             content = {}
         return jsonify({"data": datos}),200
-
+#MOSTRAR NEGOCIOS EN ZONA DE ADMINISTRACION
 class MostrarNegocios(MethodView):
     def get(self):
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio WHERE idusuario = 1;")
+        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio;")
         negocios = cur.fetchall()
         cur.close()
         datos = []
@@ -350,6 +349,7 @@ class MostrarNegocios(MethodView):
 
 class MostrarNegocio(MethodView):
     def get(self):
+        time.sleep(3)
         id_negocio = request.args.get('id')
         print(id_negocio)
         cur = mysql.connection.cursor()
@@ -409,39 +409,40 @@ class RegisterEmpresaControllers(MethodView):
 
 class ActualizarNegocio(MethodView):
     def post(self):
-        #try:
-        content = request.get_json()
-        id_e = content.get("idn")
-        nombre = content.get("nombre")
-        tipo_empresa = content.get("tipo")
-        direccion = content.get("direccion")
-        telefono_principal = content.get("telefono1")
-        telefono_secundario = content.get("telefono2")
-        horarios = content.get("horarios")
-        correo = content.get("correo")
-        logo = content.get("logo")
-        #id_usuario = content.get("idUsuario")
-
-        cur = mysql.connection.cursor()
-        cur.execute("""
-        UPDATE negocio SET nombrenegocio = %s, tipo = %s, direccion = %s, horarios = %s, telefono1 = %s, telefono2 = %s, correo = %s, logo = %s
-        WHERE id = %s;""",(nombre, tipo_empresa, direccion, horarios, telefono_principal, telefono_secundario, correo, logo, id_e))
-        mysql.connection.commit()
-        cur.close()
-        return jsonify({"Se ha actualizado correctamente": True}),200
+        time.sleep(1)
+        try:
+            content = request.get_json()
+            id_e = content.get("idn")
+            nombre = content.get("nombre")
+            tipo_empresa = content.get("tipo")
+            direccion = content.get("direccion")
+            telefono_principal = content.get("telefono1")
+            telefono_secundario = content.get("telefono2")
+            horarios = content.get("horarios")
+            correo = content.get("correo")
+            cur = mysql.connection.cursor()
+            cur.execute("""
+            UPDATE negocio SET nombrenegocio = %s, tipo = %s, direccion = %s, horarios = %s, telefono1 = %s, telefono2 = %s, correo = %s
+            WHERE id = %s;""",(nombre, tipo_empresa, direccion, horarios, telefono_principal, telefono_secundario, correo, id_e))
+            mysql.connection.commit()
+            cur.close()
+            return jsonify({"Se ha actualizado correctamente": True}),200
+        except:
+            return jsonify({"static":False}),403
 
 class EliminarNegocio(MethodView):
     def delete(self):
-        #try:
-        id_negocio = request.args.get('id')
-        print(id_negocio)
-        cur = mysql.connection.cursor()
-        cur.execute("""
-        DELETE negocio WHERE id = %s;
-        """,([id_negocio]))
-        mysql.connection.commit()
-        cur.close()
-        return jsonify({"data": "Se ha eliminado el negocio exitosamente"}),200
+        try:
+            id_negocio = request.args.get('id')
+            print("ELIMINAR ",id_negocio) 
+            cur = mysql.connection.cursor()
+            cur.execute('DELETE FROM negocio WHERE id = %s;',([int(id_negocio)]))
+            mysql.connection.commit()
+            cur.close()
+            return jsonify({"data": True}),200
+        except:
+            return jsonify({"data":False}),500
+        
 
 #MODULO DE PRODUCTOS
 
@@ -450,13 +451,13 @@ class MostrarProductosNegocio(MethodView):
         id_negocio = request.args.get('id')
         print(id_negocio)
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, foto, nombre, precio, descripcion FROM producto WHERE idnegocio = %s;",([id_negocio]))
+        cur.execute("SELECT id, foto, nombre, precio, iva FROM producto WHERE idnegocio = %s;",([id_negocio]))
         productos = cur.fetchall()
         cur.close()
         datos = []
         content = {}
         for valor in productos:
-            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3], 'descripcion':valor[4]}
+            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3], 'iva':valor[4]}
             datos.append(content)
             content = {}
         return jsonify({"Obtener Productos": True, "data": datos}),200
@@ -464,15 +465,15 @@ class MostrarProductosNegocio(MethodView):
 class ProductoId(MethodView):
     def get(self):
         id_producto = request.args.get('id')
-        print(id_producto)
+        #print(id_producto)
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, foto, nombre, precio, descripcion FROM producto WHERE id = %s;",([id_producto]))
+        cur.execute("SELECT id, foto, nombre, precio FROM producto WHERE id = %s;",([id_producto]))
         producto = cur.fetchall()
         cur.close()
         datos = []
         content = {}
         for valor in producto:
-            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3], 'descripcion':valor[4]}
+            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3]}
             datos.append(content)
             content = {}
         return jsonify({"Obtener producto": True, "data": datos}),200
@@ -533,4 +534,20 @@ class EliminarProducto(MethodView):
         mysql.connection.commit()
         cur.close()
         return jsonify({"Se ha eliminado el producto exitosamente": True}), 200
-    #except:
+
+
+class EliminarTodoProducto(MethodView):
+    def post(self):
+        time.sleep(2)
+        try:
+            content = request.get_json()
+            id_negocio = content.get('idNegocio') 
+            print(id_negocio)
+            cur =mysql.connection.cursor()
+            cur.execute("""
+            delete from producto where idnegocio =%s
+            """,([id_negocio]))
+            mysql.connection.commit()
+            return jsonify({"status": True}), 200
+        except:
+            return jsonify({"status":False}),40

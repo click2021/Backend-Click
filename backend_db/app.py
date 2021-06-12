@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, views
 from routes import *
 from flask_cors import CORS
 from routes import app
@@ -36,3 +36,4 @@ app.add_url_rule(user["producto_id"],view_func=user["productoId"])
 app.add_url_rule(user["crear_producto"],view_func=user["crearProducto"])
 app.add_url_rule(user["actualizar_producto"],view_func=user["actualizarProducto"])
 app.add_url_rule(user["eliminar_producto"],view_func=user["eliminarProducto"])
+app.add_url_rule(user["eliminar_todo_p"],view_func=user["eliminarTodosP"])

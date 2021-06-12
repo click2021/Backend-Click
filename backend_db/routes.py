@@ -1,4 +1,4 @@
-from controllers import LoginUserControllers, RegisterUserControllers, Productos,app, PedidosUserControllers,ReservarUserControllers, DatosEmpresa, ProductosEmpresa, DatosEmpresaId
+from controllers import LoginUserControllers, RegisterUserControllers, Productos,app, PedidosUserControllers,ReservarUserControllers, DatosEmpresa, ProductosEmpresa, DatosEmpresaId,EliminarTodoProducto
 from controllers import updateProduct, delete, EnviarProductos, PedidosUser, agregar, Pedido,RegisterEmpresaControllers, MostrarNegocios, MostrarNegocioId, RegisterEmpresaControllers, ActualizarNegocio, EliminarNegocio, MostrarProductosNegocio, ProductoId, CrearProducto, ActualizarProducto, EliminarProducto, MostrarTodosLosNegocios, MostrarNegocio
 
 
@@ -34,6 +34,7 @@ user = {
     "eliminar_negocio":"/api/v02/user/eliminarNegocio","eliminarNegocio":EliminarNegocio.as_view("eliminar_negocio_api"),
     
     #modulo producto
+    "eliminar_todo_p":"/api/v02/eliminarProduct","eliminarTodosP":EliminarTodoProducto.as_view("eliminar_todo"),
     "mostrar_productos":"/api/v02/user/mostrarProductos","mostrarProductos":MostrarProductosNegocio.as_view("mostrar_productos_api"),
     "producto_id":"/api/v02/user/productoId","productoId":ProductoId.as_view("producto_id_api"),
     "crear_producto":"/api/v02/user/crearProducto","crearProducto":CrearProducto.as_view("crear_producto_api"),

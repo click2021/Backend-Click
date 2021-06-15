@@ -14,7 +14,7 @@ import json
 app = Flask(__name__)
 app.config["MYSQL_HOST"]="localhost"
 app.config["MYSQL_USER"]="root"
-app.config["MYSQL_PASSWORD"]=""
+app.config["MYSQL_PASSWORD"]="2003"
 app.config["MYSQL_DB"]="bd_click"
 mysql=MySQL(app)
 app.secret_key='mysecretKey'
@@ -130,7 +130,7 @@ class LoginUserControllers(MethodView):
             #print("CONTRASEÑA USUARIO ",contrasenaUser)
             if bcrypt.checkpw(bytes(str(password), encoding='utf-8'),contrasenaUser.encode('utf-8')):
                 encoded_jwt = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=600), 'email': email}, KEY_TOKEN_AUTH , algorithm='HS256')
-                return jsonify({"status": "Login exitoso", "id_usuario":datos[0], "correo":datos[1], "nombres":datos[2], "apellidos":datos[3], "tipo_documento":datos[4], "numero_documento":datos[5], "fecha_nacimiento":datos[6], "numero_telefono":datos[7], "token": encoded_jwt})
+                return jsonify({"status": "Login exitoso", "id_usuario":datos[0], "correo":datos[1], "nombres":datos[2], "apellidos":datos[3], "tipo_documento":datos[4], "numero_documento":datos[5], "fecha_nacimiento":datos[6], "numero_telefono":datos[7], "token": encoded_jwt.decode('utf8')})
             else:
                 return jsonify({"status": "Usuario y contraseña no validos"}), 400
         else:    
@@ -448,7 +448,7 @@ class RegisterEmpresaControllers(MethodView):
         numeroS = content.get("numeroS")
         emailE = content.get("emailE")
         #Este id esta ya predeterminado 
-        id_usuario = 8
+        id_usuario = 1
         #Horario de la empresa 
         horario = content.get("horario")
         logo = content.get("logo")
@@ -524,16 +524,18 @@ class ProductoId(MethodView):
         id_producto = request.args.get('id')
         #print(id_producto)
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, foto, nombre, precio FROM producto WHERE id = %s;",([id_producto]))
+        cur.execute("SELECT id, foto, nombre, precio,iva FROM producto WHERE id = %s;",([id_producto]))
         producto = cur.fetchall()
         cur.close()
         datos = []
         content = {}
         for valor in producto:
-            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3]}
+            content = {'id':valor[0], 'foto':valor[1], 'nombre':valor[2], 'precio':valor[3],'iva':valor[4]}
             datos.append(content)
             content = {}
         return jsonify({"Obtener producto": True, "data": datos}),200
+
+#mofique esta parte
 class CrearProducto(MethodView):
     def post(self):
         #try:
@@ -542,15 +544,15 @@ class CrearProducto(MethodView):
         nombre = content.get("nombre")
         precio = content.get("precio")
         id_negocio = content.get("idnegocio")
-        descripcion = content.get("descripcion")
+        iva = content.get('iva')
         print(id_negocio)
         print(nombre)
-        print(descripcion)
+        print(iva)
         print(precio)
         cur = mysql.connection.cursor()
         cur.execute("""
-        INSERT INTO producto (foto, nombre, precio, idnegocio, descripcion) VALUES (%s, %s, %s, %s, %s);
-        """,(foto, nombre, precio, id_negocio, descripcion))
+        INSERT INTO producto (foto, nombre, precio, idnegocio,iva) VALUES (%s, %s, %s, %s, %s);
+        """,(foto, nombre, float(precio), id_negocio, iva))
         mysql.connection.commit()
         cur.close()
         return jsonify({"Producto creado exitosamente": True}), 200
@@ -565,13 +567,10 @@ class ActualizarProducto(MethodView):
         foto = content.get("logo")
         nombre = content.get("nombre")
         precio = content.get("precio")
-        #idnegocio = content.get("idnegocio")
-        descripcion = content.get("descripcion")
-
         cur = mysql.connection.cursor()
         cur.execute("""
-        UPDATE producto SET foto = %s, nombre = %s, precio = %s, descripcion = %s WHERE id = %s;
-        """,(foto, nombre, precio, descripcion, idproducto))
+        UPDATE producto SET foto = %s, nombre = %s, precio = %s WHERE id = %s;
+        """,(foto, nombre, precio,idproducto))
         mysql.connection.commit()
         cur.close()
         return jsonify({"Datos del producto actualizados exitosamente": True}), 200
@@ -582,11 +581,12 @@ class EliminarProducto(MethodView):
     def post(self):
     #try:
         time.sleep(2)
-        id_producto = request.args.get('id')
+        content = request.get_json()
+        id_producto = content.get('id')
         print(id_producto)
         cur =mysql.connection.cursor()
         cur.execute("""
-        DELETE producto WHERE id = %s;
+        DELETE FROM producto WHERE id = %s;
         """,([id_producto]))
         mysql.connection.commit()
         cur.close()
@@ -607,4 +607,5 @@ class EliminarTodoProducto(MethodView):
             mysql.connection.commit()
             return jsonify({"status": True}), 200
         except:
-            return jsonify({"status":False}),40
+            return jsonify({"status":False}),400
+

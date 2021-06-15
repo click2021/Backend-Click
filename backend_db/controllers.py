@@ -180,7 +180,7 @@ class RegisterUserControllers(MethodView):
         VALUES(%s, %s, %s, %s, %s, %s, %s, %s);
         """,(correo, nombres, apellidos, tipoDocumento, numDocumento, numeroTel, fechaNacimiento,  hash_password))
         if (correo):
-            #mysql.connection.commit()
+            
             print("mysql.connection.commit(): ", mysql.connection.commit() )
             #cur.close()
             return jsonify({"Registro ok": True, "Nombres":nombres, "Apellidos":apellidos, "Tipo Documemto":tipoDocumento, "Numero de documento":numDocumento, "Numero Telefono":numeroTel, "Fecha Nacimiento":fechaNacimiento, "Correo":correo,   }),200

@@ -14,10 +14,67 @@ import json
 app = Flask(__name__)
 app.config["MYSQL_HOST"]="localhost"
 app.config["MYSQL_USER"]="root"
-app.config["MYSQL_PASSWORD"]="2003"
+app.config["MYSQL_PASSWORD"]=""
 app.config["MYSQL_DB"]="bd_click"
 mysql=MySQL(app)
 app.secret_key='mysecretKey'
+
+
+#Actualizar usuario
+class ActualizarUser(MethodView):
+    def post(self):
+        time.sleep(2)
+        content = request.get_json()
+        nombres = content.get("nombres")
+        apellidos = content.get("apellidos")
+        telefono = content.get("telefono")
+        correo=content.get("correo")
+        try:
+            cur = mysql.connection.cursor()
+            cur.execute(
+            """
+            UPDATE usuario
+            SET nombres = %s, apellidos= %s, numtelefono= %s
+            WHERE correo = %s;
+            """,([nombres,apellidos,telefono,correo]))
+            mysql.connection.commit()
+            cur.close
+            
+            return jsonify({"datos": True,"nombre":nombres,"apellidos":apellidos,"numero":telefono}),200
+        except:
+            return jsonify({"datos":False}),403
+
+
+#Eliminar usuario
+class DeleteUser(MethodView):
+    def post(self):
+        content = request.get_json()
+        correo=content.get("correo")
+        try:
+            cur = mysql.connection.cursor()
+            cur.execute("DELETE FROM usuario WHERE correo = %s",([correo]))
+            mysql.connection.commit()
+            cur.close()
+            return jsonify({"status": True}),200
+        except:
+            return jsonify({"status": False}),500
+
+#Consultar negocios del usuario
+class ConsultarNegocioUser(MethodView):
+    def post(self):
+        content=request.get_json()
+        correo=content.get("correo")
+        print(correo)
+        try:
+            cur=mysql.connection.cursor()
+            cur.execute("""SELECT n.id,u.id FROM usuario u , negocio n
+            where n.idusuario = u.id and u.correo = %s;""",([correo]))
+            datos = cur.fetchall()
+            print(datos[0])
+            return jsonify({"status": True,"data":datos}),200
+        except:
+           return jsonify({"status": False}),500
+
 
 
 class Pedido(MethodView):
@@ -73,7 +130,7 @@ class LoginUserControllers(MethodView):
             #print("CONTRASEÑA USUARIO ",contrasenaUser)
             if bcrypt.checkpw(bytes(str(password), encoding='utf-8'),contrasenaUser.encode('utf-8')):
                 encoded_jwt = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=600), 'email': email}, KEY_TOKEN_AUTH , algorithm='HS256')
-                return jsonify({"status": "Login exitoso", "id_usuario":datos[0], "correo":datos[1], "nombres":datos[2], "apellidos":datos[3], "tipo_documento":datos[4], "numero_documento":datos[5], "fecha_nacimiento":datos[6], "numero_telefono":datos[7], "token": encoded_jwt.decode('utf-8')})
+                return jsonify({"status": "Login exitoso", "id_usuario":datos[0], "correo":datos[1], "nombres":datos[2], "apellidos":datos[3], "tipo_documento":datos[4], "numero_documento":datos[5], "fecha_nacimiento":datos[6], "numero_telefono":datos[7], "token": encoded_jwt})
             else:
                 return jsonify({"status": "Usuario y contraseña no validos"}), 400
         else:    
@@ -391,7 +448,7 @@ class RegisterEmpresaControllers(MethodView):
         numeroS = content.get("numeroS")
         emailE = content.get("emailE")
         #Este id esta ya predeterminado 
-        id_usuario = 1
+        id_usuario = 8
         #Horario de la empresa 
         horario = content.get("horario")
         logo = content.get("logo")

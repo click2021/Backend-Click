@@ -4,6 +4,12 @@ from flask_cors import CORS
 from routes import app
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+#Consultar negocio del usuario
+app.add_url_rule(user["consultar_negocio_user"],view_func=user["consultar_negocio_user_controllers"])
+#Actualizar usuario
+app.add_url_rule(user["actualizar_user"],view_func=user["actualizar_user_controllers"])
+#eliminar usuario
+app.add_url_rule(user["delete_user"],view_func=user["delete_user_controllers"])
 app.add_url_rule(user["pedido_user"], view_func=user["pedido_user_controllers"])
 app.add_url_rule(user["login_user"], view_func=user["login_user_controllers"])
 app.add_url_rule(user["data_empresa"], view_func=user["data_empresa_controllers"])

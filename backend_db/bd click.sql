@@ -80,7 +80,7 @@ CREATE TABLE `pedidos` (
   `idusuario` int(11) DEFAULT NULL,
   `valor` FLOAT DEFAULT NULL,
   `iva` FLOAT NOT NULL,
-  `estado` char(1) DEFAULT NULL,
+  /*`estado` char(1) DEFAULT NULL,*/
   PRIMARY KEY (`idpedido`),
   KEY `idusuario` (`idusuario`),
   KEY `idnegocio` (`idnegocio`),
@@ -88,6 +88,7 @@ CREATE TABLE `pedidos` (
   CONSTRAINT `pedidos_ibfk_2` FOREIGN KEY (`idnegocio`) REFERENCES `negocio` (`id`)
 );
 
+	SELECT * FROM pedidos;
 
 
 CREATE TABLE `detalles_pedidos` (

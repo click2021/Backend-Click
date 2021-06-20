@@ -35,7 +35,9 @@ app.add_url_rule(user["mostrar_negocio_id"],view_func=user["mostrarNegocioId"])
 app.add_url_rule(user["register_empresa"],view_func=user["registerEmpresa_controllers"])
 app.add_url_rule(user["actualizar_negocio"],view_func=user["actualizarNegocio"])
 app.add_url_rule(user["eliminar_negocio"],view_func=user["eliminarNegocio"])
-
+#historial de pedidos
+app.add_url_rule(user["historial"],view_func=user["historialPedidos"])
+app.add_url_rule(user["detallesPedido"],view_func=user["pedidoDetalles"])
 #modulo producto
 app.add_url_rule(user["mostrar_productos"],view_func=user["mostrarProductos"])
 app.add_url_rule(user["producto_id"],view_func=user["productoId"])

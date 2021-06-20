@@ -139,7 +139,7 @@ class LoginUserControllers(MethodView):
 class DatosEmpresa(MethodView):
     def get(self):
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio;")
+        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio ;")
         negocios = cur.fetchall()
         cur.close()
         datos = []
@@ -222,7 +222,7 @@ class RegisterUserControllers(MethodView):
         fechaNacimiento = content.get("fechaNacimiento")
         correo = content.get("email")
         password = content.get("password")
-        
+            
         print(password)
         #se acripta el password, se obtiene el hash
         salt = bcrypt.gensalt()
@@ -241,7 +241,6 @@ class RegisterUserControllers(MethodView):
             return jsonify({"Registro ok": True, "Nombres":nombres, "Apellidos":apellidos, "Tipo Documemto":tipoDocumento, "Numero de documento":numDocumento, "Numero Telefono":numeroTel, "Fecha Nacimiento":fechaNacimiento, "Correo":correo,   }),200
         else:
             return jsonify({"status":"El correo ya existe"}), 403
-
 class Productos(MethodView):
     def get(self):
         cur=mysql.connection.cursor()
@@ -255,6 +254,7 @@ class Productos(MethodView):
             content = {}
         return jsonify({"datos": payload}),200
 
+#Clase que nos permite descriptar el token
 class PedidosUserControllers(MethodView):
     def get(self):
         if (request.headers.get('Authorization')):
@@ -591,8 +591,6 @@ class EliminarProducto(MethodView):
         mysql.connection.commit()
         cur.close()
         return jsonify({"Se ha eliminado el producto exitosamente": True}), 200
-
-
 class EliminarTodoProducto(MethodView):
     def post(self):
         time.sleep(2)
@@ -608,4 +606,63 @@ class EliminarTodoProducto(MethodView):
             return jsonify({"status": True}), 200
         except:
             return jsonify({"status":False}),400
-
+#Se debe pegar
+class HistorialPedidos(MethodView):
+    def post(self):
+        time.sleep(1)
+        content = request.get_json()
+        correo = content.get('correo')
+        cur = mysql.connection.cursor()
+        cur.execute(
+        """
+        select p.valor,p.iva,u.nombres,
+        u.apellidos,u.numerodoc,p.fecha as FechaCompra,p.idpedido
+        from pedidos  p , detalles_pedidos  dp,usuario u,negocio n
+        where p.idpedido = dp.idpedido 
+        and u.id = p.idusuario 
+        and n.id = p.idnegocio
+        and n.correo = %s
+        and p.fecha <= curdate()
+        order by p.fecha desc;
+        """,([correo]))
+        datas = cur.fetchall()
+        cur.close()
+        datos = []
+        content = {}
+        for valor in datas:
+            content = {"valor":valor[0],"iva":valor[1],"nombreUser":valor[2],
+            "apellidosUser":valor[3],"numeroDoc":valor[4],"fecha":valor[5],"noPedido":valor[6]
+            }
+            datos.append(content)
+        return jsonify({'status':True,"data":datos}),200
+class DetallesPedidos(MethodView):
+    def post(self):
+        time.sleep(1)
+        content = request.get_json()
+        idPedido = content.get('id')
+        cur = mysql.connection.cursor()
+        cur.execute(
+            """
+            select u.numerodoc,u.tipodoc,
+            u.nombres as NombreUser,
+            u.apellidos,p.nombre,dp.cantidad,
+            dp.valorunit,ps.valor,
+            ps.iva from detalles_pedidos dp,
+            pedidos ps,producto p,usuario u 
+            where ps.idpedido = dp.idpedido and 
+            p.id = dp.idproducto and u.id=ps.idusuario and ps.idpedido = %s;
+            """,([idPedido])
+        )
+        data = cur.fetchall()
+        cur.close()
+        datos = []
+        content = {}
+        for valor in data:
+            content = {"doc":valor[0],"tipoDoc":valor[1],
+            "nombreUser":valor[2],"apellido":valor[3],
+            "nombreProduct":valor[4],"cantidad":valor[5],"valorProduct": valor[6],"valor":valor[7],
+            "iva":valor[8]
+            }
+            datos.append(content)
+        print(datos)
+        return jsonify({"data":datos})

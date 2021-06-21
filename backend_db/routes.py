@@ -1,5 +1,5 @@
-from controllers import LoginUserControllers, RegisterUserControllers, Productos, app, PedidosUserControllers,ReservarUserControllers, DatosEmpresa, ProductosEmpresa, DatosEmpresaId, EliminarTodoProducto
-from controllers import updateProduct, delete, EnviarProductos, agregar, RegisterEmpresaControllers, MostrarNegocios, MostrarNegocioId, RegisterEmpresaControllers, ActualizarNegocio, EliminarNegocio, MostrarProductosNegocio, ProductoId, CrearProducto, ActualizarProducto, EliminarProducto, MostrarTodosLosNegocios, MostrarNegocio, RegistroPedido
+from controllers import LoginUserControllers, RegisterUserControllers, Productos, app, ReservarUserControllers, DatosEmpresa, ProductosEmpresa, DatosEmpresaId, EliminarTodoProducto
+from controllers import updateProduct, delete, EnviarProductos, agregar, RegisterEmpresaControllers, MostrarNegocios, MostrarNegocioId, RegisterEmpresaControllers, ActualizarNegocio, EliminarNegocio, MostrarProductosNegocio, ProductoId, CrearProducto, ActualizarProducto, EliminarProducto, MostrarTodosLosNegocios, MostrarNegocio, RegistroPedido, pedirIdPedido, RegistroDetallesPedido
 from controllers import DeleteUser,ActualizarUser,ConsultarNegocioUser
 
 
@@ -28,7 +28,8 @@ user = {
     
     #modulo pedido
     "registro_pedido":"/api/v02/user/pedido", "pedido_user_controlers":RegistroPedido.as_view("pedido_api"),
-    
+    "pedir_pedido_id":"/api/v02/user/pedidoid", "pedido_user_id_controlers":pedirIdPedido.as_view("pedido_id_api"),
+    "registro_pedido_detalles":"/api/v02/user/pedidodetalles", "pedido_user_detalles_controlers":RegistroDetallesPedido.as_view("pedido_detalles_api"),
 
     #modulo negocio
     "mostrar_todos_negocios":"/api/v02/user/negocios","negocios":MostrarTodosLosNegocios.as_view("negocios_api"),

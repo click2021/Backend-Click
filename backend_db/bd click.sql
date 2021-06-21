@@ -88,8 +88,14 @@ CREATE TABLE `pedidos` (
   CONSTRAINT `pedidos_ibfk_2` FOREIGN KEY (`idnegocio`) REFERENCES `negocio` (`id`)
 );
 
-	SELECT * FROM pedidos;
+INSERT INTO pedidos(idnegocio, fecha, idusuario, valor, iva) 
+VALUES(2, "2001-07-16", 2, 50000, 5200 );
 
+SELECT * FROM pedidos;
+
+SELECT idpedido, idnegocio, fecha, idusuario, valor, iva FROM pedidos;
+
+/*
 
 CREATE TABLE `detalles_pedidos` (
   `iddetallep` int(11) NOT NULL AUTO_INCREMENT,
@@ -97,6 +103,7 @@ CREATE TABLE `detalles_pedidos` (
   `idproducto` int(11) NOT NULL,
   `cantidad` int(11) DEFAULT NULL,
   `valorunit` float DEFAULT NULL,
+  `iva` float DEFAULT NULL,
   PRIMARY KEY (`iddetallep`),
   KEY `idpedido` (`idpedido`),
   KEY `idproducto` (`idproducto`),
@@ -104,4 +111,18 @@ CREATE TABLE `detalles_pedidos` (
   CONSTRAINT `detalles_pedidos_ibfk_2` FOREIGN KEY (`idproducto`) REFERENCES `producto` (`id`)
 );
 
+*/
 
+
+CREATE TABLE `detalles_pedidos` (
+  `iddetallep` int(11) NOT NULL AUTO_INCREMENT,
+  `idproducto` int(11) NOT NULL,
+  `cantidad` int(11) DEFAULT NULL,
+  `valorunit` float DEFAULT NULL,
+  `iva` float DEFAULT NULL,
+  PRIMARY KEY (`iddetallep`),
+  KEY `idproducto` (`idproducto`),
+  CONSTRAINT `detalles_pedidos_ibfk_2` FOREIGN KEY (`idproducto`) REFERENCES `producto` (`id`)
+);
+
+SELECT * FROM detalles_pedidos;

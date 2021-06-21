@@ -15,7 +15,6 @@ CREATE TABLE `usuario` (
   UNIQUE KEY `correo` (`correo`)
 );
 
-
 INSERT INTO usuario(correo, nombres, apellidos, tipodoc, numerodoc, fechanac, numtelefono, pass) 
 VALUES	('maicol@gmail.com', 'Maicol Fernando', 'Hernandez Peralta', 'CC', '1005367685', '2001-05-16', '30465625', 'djl3j2l4jdl3'),('maicolgomez420@gmail.com','maicol','hernandez gomez','CC','4566600','1999-06-28','312645577','jalñskañskdsk456');
 
@@ -39,10 +38,8 @@ CREATE TABLE `negocio` (
   CONSTRAINT `negocio_ibfk_1` FOREIGN KEY (`idusuario`) REFERENCES `usuario` (`id`)
 );
 
-SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio;
 
-INSERT INTO `negocio`(nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo) 
-VALUES ('El buen sazon','comida','una casa','7am a 8pm','12314','243252','elbuensazon@gmail.com',1,'https://i.pinimg.com/originals/c2/bf/8f/c2bf8fe358f491df2bc6ebc34057172f.jpg'),('Papitas enpolvadas','Camida Rapida','Calarca','7am a 11pm','32664466','888445','papitasenpolvadas@gmail.com',1,'https://img.freepik.com/vector-gratis/deliciosa-comida-rapida-estilo-pop-art_24908-61615.jpg');
+INSERT INTO `negocio` VALUES (1,'El buen sazon','comida','una casa','7am a 8pm','12314','243252','elbuensazon@gmail.com',1,'https://i.pinimg.com/originals/c2/bf/8f/c2bf8fe358f491df2bc6ebc34057172f.jpg'),(2,'Papitas enpolvadas','Camida Rapida','Calarca','7am a 11pm','32664466','888445','papitasenpolvadas@gmail.com',1,'https://img.freepik.com/vector-gratis/deliciosa-comida-rapida-estilo-pop-art_24908-61615.jpg');
 
 SELECT * FROM negocio;
 
@@ -76,6 +73,7 @@ VALUES 	("https://s1.eestatic.com/2019/07/02/cocinillas/actualidad-gastronomica/
 
 SELECT * FROM producto;
 
+/*
 CREATE TABLE `pedidos` (
   `idpedido` int(11) NOT NULL AUTO_INCREMENT,
   `idnegocio` int(11) DEFAULT NULL,
@@ -91,6 +89,24 @@ CREATE TABLE `pedidos` (
   CONSTRAINT `pedidos_ibfk_2` FOREIGN KEY (`idnegocio`) REFERENCES `negocio` (`id`)
 );
 
+*/
+
+
+
+CREATE TABLE `pedidos` (
+  `idpedido` int(11) NOT NULL AUTO_INCREMENT,
+  `fecha` datetime DEFAULT NULL,
+  `valor` FLOAT DEFAULT NULL,
+  `iva` FLOAT NOT NULL,
+  PRIMARY KEY (`idpedido`)
+);
+
+INSERT INTO pedidos( fecha, valor, iva) 
+VALUES("2001-05-16", 50000, 5200 );
+
+SELECT * FROM pedidos;
+
+SELECT idpedido, fecha, valor, iva FROM pedidos;
 
 CREATE TABLE `detalles_pedidos` (
   `iddetallep` int(11) NOT NULL AUTO_INCREMENT,
@@ -98,6 +114,7 @@ CREATE TABLE `detalles_pedidos` (
   `idproducto` int(11) NOT NULL,
   `cantidad` int(11) DEFAULT NULL,
   `valorunit` float DEFAULT NULL,
+  `iva` float DEFAULT NULL,
   PRIMARY KEY (`iddetallep`),
   KEY `idpedido` (`idpedido`),
   KEY `idproducto` (`idproducto`),
@@ -105,4 +122,4 @@ CREATE TABLE `detalles_pedidos` (
   CONSTRAINT `detalles_pedidos_ibfk_2` FOREIGN KEY (`idproducto`) REFERENCES `producto` (`id`)
 );
 
-
+SELECT * FROM detalles_pedidos;

@@ -1,6 +1,7 @@
 from controllers import LoginUserControllers, RegisterUserControllers, Productos, app, ReservarUserControllers, DatosEmpresa, ProductosEmpresa, DatosEmpresaId, EliminarTodoProducto
 from controllers import updateProduct, delete, EnviarProductos, agregar, RegisterEmpresaControllers, MostrarNegocios, MostrarNegocioId, RegisterEmpresaControllers, ActualizarNegocio, EliminarNegocio, MostrarProductosNegocio, ProductoId, CrearProducto, ActualizarProducto, EliminarProducto, MostrarTodosLosNegocios, MostrarNegocio, RegistroPedido, pedirIdPedido, RegistroDetallesPedido
-from controllers import DeleteUser,ActualizarUser,ConsultarNegocioUser
+
+from controllers import DeleteUser,ActualizarUser,ConsultarNegocioUser, HistorialPedidos, DetallesPedidos
 
 
 user = {
@@ -39,7 +40,9 @@ user = {
     "mostrar_negocio_id":"/api/v02/user/mostrarNegocioId","mostrarNegocioId":MostrarNegocioId.as_view("mostrar_negocio_id_api"),
     "actualizar_negocio":"/api/v02/user/actualizarNegocio","actualizarNegocio":ActualizarNegocio.as_view("actualizar_negocio_api"),
     "eliminar_negocio":"/api/v02/user/eliminarNegocio","eliminarNegocio":EliminarNegocio.as_view("eliminar_negocio_api"),
-    
+    #agregar
+    "historial":"/api/v02/user/historialPedidos","historialPedidos":HistorialPedidos.as_view('historial_api'),
+    "detallesPedido":"/api/v02/user/detallesPedidos","pedidoDetalles":DetallesPedidos.as_view('api_detalles'),
     #modulo producto
     "eliminar_todo_p":"/api/v02/eliminarProduct","eliminarTodosP":EliminarTodoProducto.as_view("eliminar_todo"),
     "mostrar_productos":"/api/v02/user/mostrarProductos","mostrarProductos":MostrarProductosNegocio.as_view("mostrar_productos_api"),

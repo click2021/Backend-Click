@@ -95,7 +95,6 @@ SELECT * FROM pedidos;
 
 SELECT idpedido, idnegocio, fecha, idusuario, valor, iva FROM pedidos;
 
-/*
 
 CREATE TABLE `detalles_pedidos` (
   `iddetallep` int(11) NOT NULL AUTO_INCREMENT,
@@ -111,18 +110,7 @@ CREATE TABLE `detalles_pedidos` (
   CONSTRAINT `detalles_pedidos_ibfk_2` FOREIGN KEY (`idproducto`) REFERENCES `producto` (`id`)
 );
 
-*/
-
-
-CREATE TABLE `detalles_pedidos` (
-  `iddetallep` int(11) NOT NULL AUTO_INCREMENT,
-  `idproducto` int(11) NOT NULL,
-  `cantidad` int(11) DEFAULT NULL,
-  `valorunit` float DEFAULT NULL,
-  `iva` float DEFAULT NULL,
-  PRIMARY KEY (`iddetallep`),
-  KEY `idproducto` (`idproducto`),
-  CONSTRAINT `detalles_pedidos_ibfk_2` FOREIGN KEY (`idproducto`) REFERENCES `producto` (`id`)
-);
+INSERT INTO detalles_pedidos(idpedido, idproducto, cantidad, valorunit, iva) 
+VALUES(1, 4, 12, 45000, 120); 
 
 SELECT * FROM detalles_pedidos;

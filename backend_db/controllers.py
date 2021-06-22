@@ -43,9 +43,11 @@ class RegistroPedido(MethodView):
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO pedidos(idnegocio, fecha, idusuario, valor, iva) VALUES(%s, %s, %s, %s, %s)",(int(idnegocio), fecha, int(idusuario), float(valor), float(iva)))
         mysql.connection.commit()
-        ##
+        #se extrae el ultimo id del pedido insertado
+        id =  cur.execute("select @@identity id from pedidos")
+        print("se extrae el ultimo id del pedido insertado", id)
         cur.close()
-        return jsonify({"datos":True, "id_negocio":idnegocio, "feche":fecha, "id_usuario":idusuario, "Valor_total":valor, "iva":iva}),200
+        return jsonify({"datos":True, "id_pedido":id, "id_negocio":idnegocio, "feche":fecha, "id_usuario":idusuario, "Valor_total":valor, "iva":iva}),200
       
 
 #registro detalles del pedido
@@ -54,24 +56,30 @@ class RegistroDetallesPedido(MethodView):
         content = request.get_json()
         detallesPedido = content.get("pedidoDetalles")
         #print("detallesPedido: ", detallesPedido)
-        pedido = []
-        datos = {} 
 
-        for detallesPedido in detallesPedido:
-           datos = {detallesPedido[0]}
-           pedido.append(datos)
-           datos = {}
-           print(pedido)
-           
-        
         for claveDetallaes in detallesPedido:
-            claveDetallaes
-            #print("claveDetallaes ",claveDetallaes)
 
-        for clave, valor in claveDetallaes.items():
-            #print(claveDetallaes[clave])
-            #print(clave)
-            print(valor)
+            if 'id' in claveDetallaes:
+                idProducto = claveDetallaes['id']
+
+            if 'precio' in claveDetallaes:
+                valorProducto = claveDetallaes['precio']
+
+            if 'cantidad' in claveDetallaes:
+                cantidadProducto = claveDetallaes['cantidad']
+
+            if 'iva' in claveDetallaes:
+                ivaProducto = claveDetallaes['iva']
+
+            if 'idPedido' in claveDetallaes:
+                idPedido = claveDetallaes['idPedido']
+
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO detalles_pedidos(idproducto, valorunit, cantidad, iva, idpedido) VALUES(%s, %s, %s, %s, %s)",(idProducto, valorProducto, cantidadProducto, ivaProducto, idPedido))
+            mysql.connection.commit()
+            cur.close()
+        return jsonify({"datos":True}),200
+
 
 #pedir id del pedido
 class pedirIdPedido(MethodView):

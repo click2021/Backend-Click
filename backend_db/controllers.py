@@ -55,7 +55,6 @@ class RegistroDetallesPedido(MethodView):
     def post(self):
         content = request.get_json()
         detallesPedido = content.get("pedidoDetalles")
-        #print("detallesPedido: ", detallesPedido)
 
         for claveDetallaes in detallesPedido:
 

@@ -31,7 +31,7 @@ def remove_imageNegocio():
 def upload_file():
     f = request.files['img']
     negocio  = request.form.get('nombreEmpresa')
-    print(negocio)
+    print("NOMBRE DE LA EMPRESA: ", negocio)
     try:
       os.mkdir('imagenes/logo/')
       print("negocio: ", negocio)
@@ -52,7 +52,6 @@ def upload_update():
     return jsonify({"status":True}),200
   except:
     return jsonify({"status":False}),200
-
 
 #modulo de productos
 @app.route('/uploadProducto',methods = ['POST'])

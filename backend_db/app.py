@@ -8,9 +8,14 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 app.add_url_rule(user["consultar_negocio_user"],view_func=user["consultar_negocio_user_controllers"])
 #Actualizar usuario
 app.add_url_rule(user["actualizar_user"],view_func=user["actualizar_user_controllers"])
+#Modulo pedido
+app.add_url_rule(user["registro_pedido"],view_func=user["pedido_user_controlers"])
+app.add_url_rule(user["pedir_pedido_id"],view_func=user["pedido_user_id_controlers"])
+app.add_url_rule(user["registro_pedido_detalles"],view_func=user["pedido_user_detalles_controlers"])
+
+
 #eliminar usuario
 app.add_url_rule(user["delete_user"],view_func=user["delete_user_controllers"])
-app.add_url_rule(user["pedido_user"], view_func=user["pedido_user_controllers"])
 app.add_url_rule(user["login_user"], view_func=user["login_user_controllers"])
 app.add_url_rule(user["data_empresa"], view_func=user["data_empresa_controllers"])
 app.add_url_rule(user["data_empresa_id"], view_func=user["data_empresa_id_controllers"])
@@ -20,9 +25,7 @@ app.add_url_rule(user["enviar_productos"],view_func=user["enviar_productos_contr
 app.add_url_rule(user["registro_user"], view_func=user["user_registro_controllers"])
 app.add_url_rule(user["Productos_clients"],view_func=user["productos"])
 
-app.add_url_rule(user["Productos_clients_pedidos"],view_func=user["productosPedidos"])
 app.add_url_rule(user["Reservar_user"],view_func=user["reservar_user_controllers"])
-app.add_url_rule(user["PedidosUser"],view_func=user["pedidosUsers"])
 app.add_url_rule(user["ActualizarProducto"],view_func=user["update"])
 app.add_url_rule(user["delenteProduct"],view_func=user["Productdelete"])
 app.add_url_rule(user["AgregarProduct"],view_func=user["insertProduct"])

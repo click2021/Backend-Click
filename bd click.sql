@@ -73,6 +73,7 @@ VALUES 	("https://s1.eestatic.com/2019/07/02/cocinillas/actualidad-gastronomica/
 
 SELECT * FROM producto;
 
+/*
 CREATE TABLE `pedidos` (
   `idpedido` int(11) NOT NULL AUTO_INCREMENT,
   `idnegocio` int(11) DEFAULT NULL,
@@ -80,7 +81,7 @@ CREATE TABLE `pedidos` (
   `idusuario` int(11) DEFAULT NULL,
   `valor` FLOAT DEFAULT NULL,
   `iva` FLOAT NOT NULL,
-  /*`estado` char(1) DEFAULT NULL,*/
+  `estado` char(1) DEFAULT NULL,
   PRIMARY KEY (`idpedido`),
   KEY `idusuario` (`idusuario`),
   KEY `idnegocio` (`idnegocio`),
@@ -88,13 +89,24 @@ CREATE TABLE `pedidos` (
   CONSTRAINT `pedidos_ibfk_2` FOREIGN KEY (`idnegocio`) REFERENCES `negocio` (`id`)
 );
 
-INSERT INTO pedidos(idnegocio, fecha, idusuario, valor, iva) 
-VALUES(2, "2001-07-16", 2, 50000, 5200 );
+*/
+
+
+
+CREATE TABLE `pedidos` (
+  `idpedido` int(11) NOT NULL AUTO_INCREMENT,
+  `fecha` datetime DEFAULT NULL,
+  `valor` FLOAT DEFAULT NULL,
+  `iva` FLOAT NOT NULL,
+  PRIMARY KEY (`idpedido`)
+);
+
+INSERT INTO pedidos( fecha, valor, iva) 
+VALUES("2001-05-16", 50000, 5200 );
 
 SELECT * FROM pedidos;
 
-SELECT idpedido, idnegocio, fecha, idusuario, valor, iva FROM pedidos;
-
+SELECT idpedido, fecha, valor, iva FROM pedidos;
 
 CREATE TABLE `detalles_pedidos` (
   `iddetallep` int(11) NOT NULL AUTO_INCREMENT,
@@ -109,8 +121,5 @@ CREATE TABLE `detalles_pedidos` (
   CONSTRAINT `detalles_pedidos_ibfk_1` FOREIGN KEY (`idpedido`) REFERENCES `pedidos` (`idpedido`),
   CONSTRAINT `detalles_pedidos_ibfk_2` FOREIGN KEY (`idproducto`) REFERENCES `producto` (`id`)
 );
-
-INSERT INTO detalles_pedidos(idpedido, idproducto, cantidad, valorunit, iva) 
-VALUES(1, 4, 12, 45000, 120); 
 
 SELECT * FROM detalles_pedidos;

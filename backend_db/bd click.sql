@@ -88,13 +88,20 @@ CREATE TABLE `pedidos` (
   CONSTRAINT `pedidos_ibfk_2` FOREIGN KEY (`idnegocio`) REFERENCES `negocio` (`id`)
 );
 
+select p.valor, p.iva, p.idpedido, p.fecha as FechaCompra, u.nombres, u.apellidos, u.numerodoc
+from pedidos p, detalles_pedidos dp, usuario u, negocio n 
+where p.idpedido = dp.idpedido and u.id = p.idusuario 
+and n.id = p.idnegocio and n.correo = 'elbuensazon@gmail.com' 
+and p.fecha <= curdate()
+order by p.fecha desc;
+        
+
 INSERT INTO pedidos(idnegocio, fecha, idusuario, valor, iva) 
 VALUES(2, "2001-07-16", 2, 50000, 5200 );
 
 SELECT * FROM pedidos;
 
 SELECT idpedido, idnegocio, fecha, idusuario, valor, iva FROM pedidos;
-
 
 CREATE TABLE `detalles_pedidos` (
   `iddetallep` int(11) NOT NULL AUTO_INCREMENT,

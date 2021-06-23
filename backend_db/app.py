@@ -10,7 +10,6 @@ app.add_url_rule(user["consultar_negocio_user"],view_func=user["consultar_negoci
 app.add_url_rule(user["actualizar_user"],view_func=user["actualizar_user_controllers"])
 #Modulo pedido
 app.add_url_rule(user["registro_pedido"],view_func=user["pedido_user_controlers"])
-app.add_url_rule(user["pedir_pedido_id"],view_func=user["pedido_user_id_controlers"])
 app.add_url_rule(user["registro_pedido_detalles"],view_func=user["pedido_user_detalles_controlers"])
 
 

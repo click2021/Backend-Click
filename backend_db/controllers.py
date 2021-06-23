@@ -31,17 +31,25 @@ class RegistroPedido(MethodView):
         valor = content.get("valorTotal")
         fecha = content.get("fecha")
         idnegocio = content.get("id_negocio")
+        #se cambia el formato de la fecha.
         idusuario = content.get("id_usuario")
+        partesFecha = fecha.split(" ")[0].split("/")
+        convertidaFecha = "-".join(reversed(partesFecha))
+        partesHora = fecha.split(" ")[1].split("/")
+        convertidaHora = "-".join(reversed(partesHora))
 
+        fechaCovertida = convertidaFecha +" "+ convertidaHora
+        #print("convertida+convertidaT: ", fechaCovertida)
         print("ESTE ES EL VALOR DEL PEDIDO: ",
        "idnegocio: ", idnegocio,
        "iva: ", iva,
        "valor: ", valor,
-       "fecha", fecha,
+       "fechaCovertida:", fechaCovertida,
        "idusuario", idusuario)
+       
 
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO pedidos(idnegocio, fecha, idusuario, valor, iva) VALUES(%s, %s, %s, %s, %s)",(int(idnegocio), fecha, int(idusuario), float(valor), float(iva)))
+        cur.execute("INSERT INTO pedidos(idnegocio, fecha, idusuario, valor, iva) VALUES(%s, %s, %s, %s, %s)",(int(idnegocio), fechaCovertida, int(idusuario), valor, iva))
         mysql.connection.commit()
         #se extrae el ultimo id del pedido insertado
         id =  cur.execute("select @@identity id from pedidos")
@@ -77,7 +85,7 @@ class RegistroDetallesPedido(MethodView):
             cur.execute("INSERT INTO detalles_pedidos(idproducto, valorunit, cantidad, iva, idpedido) VALUES(%s, %s, %s, %s, %s)",(idProducto, valorProducto, cantidadProducto, ivaProducto, idPedido))
             mysql.connection.commit()
             cur.close()
-        return jsonify({"datos":True}),200
+        return jsonify({"datos":True, "id_producto":idProducto, "valor_producto":valorProducto, "cantidad_producto":cantidadProducto, "iva_producto":ivaProducto, "id_pedido":idPedido}),200
 
 
 #pedir id del pedido
@@ -149,22 +157,7 @@ class ConsultarNegocioUser(MethodView):
         except:
            return jsonify({"status": False}),500
 
-"""
-class Pedido(MethodView):
-    def post(self):
-        #time.sleep(3)
-        content = request.get_json()
-        nombres = content.get("nombres")
-        apellidos = content.get("apellidos")
-        telefono = content.get("telefono")
-        correo = content.get("correo")
-        direccion = content.get("direccion")        
-        cursor = mysql.connection.cursor()
-        cursor.execute(""""INSERT INTO comprador (nombres, apellidos, telefono, correo, direccion) VALUES(%s, %s, %s, %s, %s)"""",(nombres, apellidos, telefono, correo, direccion))
-        mysql.connection.commit()
-        cursor.close
-        return jsonify({"Se ha registrado el pedido": True, "nombres": nombres, "apellidos": apellidos, "telefono": telefono, "correo": correo, "direccion": direccion})
-"""
+
 class LoginUserControllers(MethodView):
     """
         Example Login
@@ -363,31 +356,8 @@ class ReservarUserControllers(MethodView):
             return jsonify({"data":True}),200
         except:
             return "Lo sentimos el registro ya se ha hecho antes "
-"""
-class PedidosUser(MethodView):
-    def post(self):
-        time.sleep(3)
-        content = request.get_json()
-        direccion = content.get('direccion')
-        numeroS = content.get('numeroSecundario')
-        fecha = content.get('fecha')
-        cantidad = content.get('cantidad')
-        comida = content.get('comida')
-        usuario = content.get('user')
-        try:
-            cur=mysql.connection.cursor()
-            cur.execute(""""""
-            insert into pedidos
-            (direccion,numeroSecudario,cantidad,producto,correo,fecha)
-            values
-            (%s,%s,%s,%s,%s,%s);
-            """""",(direccion,numeroS,cantidad,comida,usuario,fecha))
-            mysql.connection.commit()
-            cur.close()
-            return jsonify({"datos": True}),200
-        except:
-            return jsonify({"datos": False}),403
-"""
+
+
 class updateProduct(MethodView):
     def post(self):
         time.sleep(3)
@@ -699,20 +669,25 @@ class HistorialPedidos(MethodView):
         order by p.fecha desc;
         """,([correo]))
         datas = cur.fetchall()
-        cur.close()
+        print(datas)
+        #cur.close()
         datos = []
         content = {}
         for valor in datas:
             content = {"valor":valor[0],"iva":valor[1],"nombreUser":valor[2],
             "apellidosUser":valor[3],"numeroDoc":valor[4],"fecha":valor[5],"noPedido":valor[6]
             }
+            print("fecha:",valor[5])
             datos.append(content)
+
         return jsonify({'status':True,"data":datos}),200
+
 class DetallesPedidos(MethodView):
     def post(self):
         time.sleep(1)
         content = request.get_json()
         idPedido = content.get('id')
+        print("idPedido:",idPedido)
         cur = mysql.connection.cursor()
         cur.execute(
             """

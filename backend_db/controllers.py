@@ -17,7 +17,7 @@ import json
 app = Flask(__name__)
 app.config["MYSQL_HOST"]="localhost"
 app.config["MYSQL_USER"]="root"
-app.config["MYSQL_PASSWORD"]=""
+app.config["MYSQL_PASSWORD"]="2003"
 app.config["MYSQL_DB"]="bd_click"
 mysql=MySQL(app)
 app.secret_key='mysecretKey'
@@ -101,6 +101,7 @@ class pedirIdPedido(MethodView):
             pedidoData.append(datos)
             datos = {}
         return jsonify({"status":True, "datos_pedido": pedidoData })
+
 
 
 #Actualizar usuario
@@ -198,7 +199,7 @@ class LoginUserControllers(MethodView):
             if bcrypt.checkpw(bytes(str(password), encoding='utf-8'),contrasenaUser.encode('utf-8')):
                 encoded_jwt = jwt.encode({'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=600), 'email': email}, KEY_TOKEN_AUTH , algorithm='HS256')
                 
-                return jsonify({"status": "Login exitoso", "id_usuario":datos[0], "correo":datos[1], "nombres":datos[2], "apellidos":datos[3], "tipo_documento":datos[4], "numero_documento":datos[5], "fecha_nacimiento":datos[6], "numero_telefono":datos[7], "token": encoded_jwt})
+                return jsonify({"status": "Login exitoso", "id_usuario":datos[0], "correo":datos[1], "nombres":datos[2], "apellidos":datos[3], "tipo_documento":datos[4], "numero_documento":datos[5], "fecha_nacimiento":datos[6], "numero_telefono":datos[7], "token": encoded_jwt.decode('utf-8')})
             else:
                 return jsonify({"status": "Usuario y contraseña no validos"}), 400
         else:    
@@ -434,9 +435,19 @@ class MostrarTodosLosNegocios(MethodView):
         return jsonify({"data": datos}),200
 #MOSTRAR NEGOCIOS EN ZONA DE ADMINISTRACION
 class MostrarNegocios(MethodView):
-    def get(self):
+    def post(self):
+        content = request.get_json()
+        correo = content.get('correo')
+        print(correo)
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, idusuario, logo FROM negocio;")
+        cur.execute("""
+        SELECT n.id, n.nombrenegocio,
+        n.tipo, n.direccion,n.horarios,
+        n.telefono1,n.telefono2,
+        n.correo,n.idusuario,n.logo FROM negocio n ,usuario u
+        where n.idusuario = u.id and u.correo = %s;
+        """,([correo])
+        )
         negocios = cur.fetchall()
         cur.close()
         datos = []
@@ -490,17 +501,23 @@ class RegisterEmpresaControllers(MethodView):
         numeroE = content.get("numeroE")
         numeroS = content.get("numeroS")
         emailE = content.get("emailE")
-        #Este id esta ya predeterminado 
-        id_usuario = 1
+        #Correo del usuario
+        correo = content.get("correo")
         #Horario de la empresa 
         horario = content.get("horario")
         logo = content.get("logo")
         cur=mysql.connection.cursor()
+        cur.execute('select id from usuario where correo = %s',([correo]))
+        datos = cur.fetchall()
+        id_usuario = 0
+        for add in datos:
+            print(add[0])
+            id_usuario = add
         cur.execute("""
         insert into negocio(nombrenegocio,tipo,direccion,telefono1,telefono2,correo,idusuario,horarios,logo)
         values
         (%s,%s,%s,%s,%s,%s,%s,%s,%s);
-        """,(nombre,tipoE,direccionE,int(numeroE),int(numeroS),emailE,int(id_usuario),horario,logo))
+        """,(nombre,tipoE,direccionE,int(numeroE),int(numeroS),emailE,id_usuario,horario,logo))
         mysql.connection.commit()
         cur.close()
         return jsonify({"data": True}),200

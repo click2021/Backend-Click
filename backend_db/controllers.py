@@ -1,4 +1,5 @@
 from os import truncate
+import smtplib
 import re
 from MySQLdb import DATETIME
 from flask.views import MethodView
@@ -12,7 +13,7 @@ from config import KEY_TOKEN_AUTH
 import datetime
 from model import users
 import json
-
+from datetime import datetime as tiempo
 #configurar de la app
 app = Flask(__name__)
 app.config["MYSQL_HOST"]="localhost"
@@ -29,25 +30,21 @@ class RegistroPedido(MethodView):
         content = request.get_json()
         iva = content.get("iva")
         valor = content.get("valorTotal")
-        fecha = content.get("fecha")
         idnegocio = content.get("id_negocio")
+        info = content.get("fecha")
         #se cambia el formato de la fecha.
         idusuario = content.get("id_usuario")
-        partesFecha = fecha.split(" ")[0].split("/")
-        convertidaFecha = "-".join(reversed(partesFecha))
-        partesHora = fecha.split(" ")[1].split("/")
-        convertidaHora = "-".join(reversed(partesHora))
-
-        fechaCovertida = convertidaFecha +" "+ convertidaHora
+        hora = tiempo.now()
+        fecha = hora.strftime("%Y-%m-%d %H:%M:%S GTM-0500")
         #print("convertida+convertidaT: ", fechaCovertida)
         print("ESTE ES EL VALOR DEL PEDIDO: ",
        "idnegocio: ", idnegocio,
        "iva: ", iva,
        "valor: ", valor,
-       "fechaCovertida:", fechaCovertida,
+       "fechaCovertida:", fecha,
        "idusuario", idusuario)
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO pedidos(idnegocio, fecha, idusuario, valor, iva) VALUES(%s, %s, %s, %s, %s)",(int(idnegocio), fechaCovertida, int(idusuario), valor, iva))
+        cur.execute("INSERT INTO pedidos(idnegocio, fecha, idusuario, valor, iva) VALUES(%s, %s, %s, %s, %s)",(int(idnegocio), fecha, int(idusuario), valor, iva))
         mysql.connection.commit()
         #se extrae el ultimo id del pedido insertado
         id =  cur.execute("select @@identity id from pedidos")
@@ -61,7 +58,13 @@ class RegistroDetallesPedido(MethodView):
     def post(self):
         content = request.get_json()
         detallesPedido = content.get("pedidoDetalles")
-
+        nombre = content.get("nombre")
+        apellido = content.get("apellidos")
+        negocio = content.get("negocio")
+        iva = content.get("iva")
+        total = content.get("total")
+        print(negocio)
+        documento = content.get("documento")
         for claveDetallaes in detallesPedido:
 
             if 'id' in claveDetallaes:
@@ -82,7 +85,23 @@ class RegistroDetallesPedido(MethodView):
             cur = mysql.connection.cursor()
             cur.execute("INSERT INTO detalles_pedidos(idproducto, valorunit, cantidad, iva, idpedido) VALUES(%s, %s, %s, %s, %s)",(idProducto, valorProducto, cantidadProducto, ivaProducto, idPedido))
             mysql.connection.commit()
-            cur.close()
+        messager = 'INFORMACION DEL PEDIDO\nInformacion del usuario\nNombre : '+nombre+"\nApellido : "+apellido+"\nDocumento : "+documento+"\n"
+        for add in detallesPedido:
+            iva = str(add['iva'])
+            precio = str(add['precio'])
+            cantidad = str(add['cantidad'])
+            text = str("Nombre del producto : "+add['nombre']+"\t Precio iva : "+iva+"\t Precio : "+precio+"\t cantidad : "+cantidad+"\n")
+            messager += text
+        iva = str(iva)
+        total = str(total)
+        messager += "IVA : "+iva+"\n"
+        messager += "TOTAL : "+total+"\n"
+        subject = 'Mensaje de click'
+        messager = 'Subject : {}\n\n{}'.format(subject,messager)
+        serve = smtplib.SMTP('smtp.gmail.com',587)
+        serve.starttls()
+        serve.login('clickproyecto791@gmail.com','click12345')
+        serve.sendmail('clickproyecto791@gmail.com',negocio,messager)
         return jsonify({"datos":True, "id_producto":idProducto, "valor_producto":valorProducto, "cantidad_producto":cantidadProducto, "iva_producto":ivaProducto, "id_pedido":idPedido}),200
 
 
@@ -478,7 +497,7 @@ class MostrarNegocioId(MethodView):
         id_negocio = request.args.get('id')
         print(id_negocio)
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, logo FROM negocio WHERE idusuario = 1 AND id = %s;",([id_negocio]))
+        cur.execute("SELECT id, nombrenegocio, tipo, direccion, horarios, telefono1, telefono2, correo, logo FROM negocio WHERE id = %s;",([id_negocio]))
         negocio = cur.fetchall()
         cur.close()
         datos = []
@@ -673,14 +692,10 @@ class HistorialPedidos(MethodView):
         cur = mysql.connection.cursor()
         cur.execute(
         """
-        select p.valor,p.iva,u.nombres,
-        u.apellidos,u.numerodoc,p.fecha as FechaCompra,p.idpedido
-        from pedidos  p , detalles_pedidos  dp,usuario u,negocio n
-        where p.idpedido = dp.idpedido 
-        and u.id = p.idusuario 
-        and n.id = p.idnegocio
+        select p.valor,p.iva,p.fecha as FechaCompra,p.idpedido
+        from pedidos  p ,negocio n
+        where n.id = p.idnegocio
         and n.correo = %s
-        and p.fecha <= curdate()
         order by p.fecha desc;
         """,([correo]))
         datas = cur.fetchall()
@@ -689,10 +704,8 @@ class HistorialPedidos(MethodView):
         datos = []
         content = {}
         for valor in datas:
-            content = {"valor":valor[0],"iva":valor[1],"nombreUser":valor[2],
-            "apellidosUser":valor[3],"numeroDoc":valor[4],"fecha":valor[5],"noPedido":valor[6]
+            content = {"valor":valor[0],"iva":valor[1],"fecha":valor[2],"noPedido":valor[3]
             }
-            print("fecha:",valor[5])
             datos.append(content)
 
         return jsonify({'status':True,"data":datos}),200

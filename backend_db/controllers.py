@@ -19,7 +19,7 @@ app = Flask(__name__)
 app.config["MYSQL_HOST"]="localhost"
 app.config["MYSQL_USER"]="root"
 app.config["MYSQL_PASSWORD"]=""
-app.config["MYSQL_DB"]="bd_click"
+app.config["MYSQL_DB"]="bd_click_prueba"
 mysql=MySQL(app)
 app.secret_key='mysecretKey'
 

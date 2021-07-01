@@ -74,7 +74,7 @@ VALUES 	("https://s1.eestatic.com/2019/07/02/cocinillas/actualidad-gastronomica/
 SELECT * FROM producto;
 
 CREATE TABLE `pedidos` (
-  `idpedido` int(11) NOT NULL AUTO_INCREMENT,
+  `idpedido` int(11) NOT NULL AUTO_INCREMENT, 
   `idnegocio` int(11) DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   `idusuario` int(11) DEFAULT NULL,
@@ -121,3 +121,8 @@ INSERT INTO detalles_pedidos(idpedido, idproducto, cantidad, valorunit, iva)
 VALUES(1, 4, 12, 45000, 120); 
 
 SELECT * FROM detalles_pedidos;
+
+
+
+
+

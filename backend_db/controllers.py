@@ -19,7 +19,7 @@ app = Flask(__name__)
 app.config["MYSQL_HOST"]="localhost"
 app.config["MYSQL_USER"]="root"
 app.config["MYSQL_PASSWORD"]=""
-app.config["MYSQL_DB"]="bd_click_prueba"
+app.config["MYSQL_DB"]="bd_click"
 mysql=MySQL(app)
 app.secret_key='mysecretKey'
 
@@ -661,10 +661,14 @@ class EliminarProducto(MethodView):
         content = request.get_json()
         id_producto = content.get('id')
         print(id_producto)
-        cur =mysql.connection.cursor()
+        cur = mysql.connection.cursor()
         cur.execute("""
         DELETE FROM producto WHERE id = %s;
         """,([id_producto]))
+        cur.execute("""
+        DELETE FROM detalles_pedidos WHERE idproducto = %s;
+        """,([id_producto]))
+        
         mysql.connection.commit()
         cur.close()
         return jsonify({"Se ha eliminado el producto exitosamente": True}), 200
